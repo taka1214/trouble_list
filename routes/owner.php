@@ -10,6 +10,7 @@ use App\Http\Controllers\Owner\Auth\PasswordController;
 use App\Http\Controllers\Owner\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Owner\Auth\RegisteredUserController;
 use App\Http\Controllers\Owner\Auth\VerifyEmailController;
+use App\Http\Controllers\Owner\UsersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('owner.welcome');
+});
+
+Route::resource('users', UsersController::class)
+->middleware(['auth:owners', 'verified']);
+
+Route::prefix('expired-users')->
+middleware('auth:owners')->group(function(){
+   Route::get('index', [UsersController::class, 'expiredUserIndex'])->name('expired-users.index');
+   Route::post('destroy/{user}', [UsersController::class, 'expiredUserDestroy'])->name('expired-users.destroy');
 });
 
 Route::get('/dashboard', function () {
