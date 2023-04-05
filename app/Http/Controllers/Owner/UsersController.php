@@ -22,7 +22,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::select('id', 'name', 'email', 'created_at')
+        $users = User::select('id', 'name', 'nickname', 'email', 'created_at')
         ->paginate(5);
         return view('owner.users.index', compact('users'));
     }
@@ -47,6 +47,7 @@ class UsersController extends Controller
     {
         User::create([
             'name' => $request->name,
+            'nickname' => $request->nickname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -93,6 +94,7 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
         $user->name = $request->name;
+        $user->nickname = $request->nickname;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->save();

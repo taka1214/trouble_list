@@ -1,7 +1,7 @@
 <x-app-layout>
   <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-      ユーザー一覧
+      投稿一覧
     </h2>
   </x-slot>
 
@@ -12,29 +12,31 @@
           <section class="text-gray-600 body-font">
             <div class="container md:px-5 mx-auto">
               <x-flash-message status="session('status)" />
-              <div class="flex justify-end mb-4">
-                <button onclick="location.href='{{ route('owner.users.create') }}'" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">新規登録</button>
-              </div>
               <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+                <div class="flex justify-end mb-4">
+                <button onclick="location.href='{{ route('user.posts.create') }}'" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">新規登録</button>
+                </div>
                 <table class="table-auto w-full text-left whitespace-no-wrap">
                   <thead>
                     <tr>
-                      <th class="md:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">名前</th>
-                      <th class="md:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">ニックネーム</th>
-                      <th class="md:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">メールアドレス</th>
+                      <th class="md:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">タイトル</th>
+                      <th class="md:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">本文</th>
+                      <!-- <th class="md:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">メールアドレス</th> -->
                       <th class="md:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">作成日</th>
                       <th class="md:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th>
-                      <th class="md:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th>
+                      <!-- <th class="md:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th> -->
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach ($users as $user)
+                    @foreach ($posts as $post)
                     <tr>
-                      <td class="md:px-4 py-3">{{ $user->name }}</td>
-                      <td class="md:px-4 py-3">{{ $user->nickname }}</td>
-                      <td class="md:px-4 py-3">{{ $user->email }}</td>
-                      <td class="md:px-4 py-3">{{ $user->created_at->diffForHumans() }}</td>
+                      <td class="md:px-4 py-3">{{ $post->title }}</td>
+                      <td class="md:px-4 py-3">{{ $post->body }}</td>
+                      <td class="md:px-4 py-3">{{ $post->created_at->diffForHumans() }}</td>
                       <td class="md:px-4 py-3 text-center">
+                        <button onclick="location.href='{{ route('user.posts.show', ['post' => $post->id]) }}'" class="text-white bg-indigo-400 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-500 rounded text-lg">詳細</button>
+                      </td>
+                      {{-- <td class="md:px-4 py-3 text-center">
                         <button onclick="location.href='{{ route('owner.users.edit', ['user' => $user->id]) }}'" class="text-white bg-indigo-400 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-500 rounded text-lg">編集</button>
                       </td>
                       <form id="delete_{{ $user->id }}" method="post" action="{{ route('owner.users.destroy', ['user' => $user->id]) }}">
@@ -43,12 +45,11 @@
                         <td class="md:px-4 py-3 text-center">
                           <a href="#" data-id="{{ $user->id }}" onclick="deletePost(this)" class="text-white bg-red-400 border-0 py-2 px-4 focus:outline-none hover:bg-red-500 rounded text-lg">削除</a>
                         </td>
-                      </form>
+                      </form> --}}
                     </tr>
                     @endforeach
                   </tbody>
                 </table>
-                {{ $users->links() }}
               </div>
             </div>
           </section>

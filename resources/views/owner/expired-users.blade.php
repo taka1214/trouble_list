@@ -17,6 +17,7 @@
                   <thead>
                     <tr>
                       <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">名前</th>
+                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">ニックネーム</th>
                       <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">メールアドレス</th>
                       <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">期限が切れた日</th>
                       <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th>
@@ -26,6 +27,7 @@
                     @foreach ($expiredUsers as $user)
                     <tr>
                       <td class="px-4 py-3">{{ $user->name }}</td>
+                      <td class="px-4 py-3">{{ $user->nickname }}</td>
                       <td class="px-4 py-3">{{ $user->email }}</td>
                       <td class="px-4 py-3">{{ $user->deleted_at->diffForHumans() }}</td>
                       <form id="delete_{{ $user->id }}" method="post" action="{{ route('owner.expired-users.destroy', ['user' => $user->id]) }}">

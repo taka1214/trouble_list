@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->softDeletes();
-            $table->string('nickname');
+        Schema::table('replies', function (Blueprint $table) {
+            $table->unsignedBigInteger('owner_id')->nullable();
+            $table->foreign('owner_id')->constrained()->references('id')->on('owners')->onDelete('cascade');
         });
     }
 
@@ -26,8 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
+        Schema::table('replies', function (Blueprint $table) {
+            $table->dropColumn('owner_id');
         });
     }
 };

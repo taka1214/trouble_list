@@ -21,6 +21,9 @@
                     <x-nav-link :href="route('owner.expired-users.index')" :active="request()->routeIs('owner.expired-users.index')">
                         期限切れユーザー管理
                     </x-nav-link>
+                    <x-nav-link :href="route('owner.posts.index')" :active="request()->routeIs('owner.posts.index')">
+                        投稿一覧
+                    </x-nav-link>
                 </div>
             </div>
 
