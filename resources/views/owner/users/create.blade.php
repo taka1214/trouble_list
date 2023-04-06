@@ -28,7 +28,7 @@
                     <div class="p-2 w-1/2 mx-auto">
                       <div class="relative">
                         <label for="nickname" class="leading-7 text-sm text-gray-600">ニックネーム</label>
-                        <input type="text" id="nickname" name="nickname" value="{{ old('nickname') }}" required class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                        <input type="text" id="nickname" name="nickname" value="{{ old('nickname') }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                         <x-input-error :messages="$errors->get('nickname')" class="mt-2" />
                       </div>
                     </div>

@@ -14,6 +14,7 @@ class Post extends Model
         'title',
         'body',
         'owner_id',
+        'user_id',
         'image_file',
     ];
 

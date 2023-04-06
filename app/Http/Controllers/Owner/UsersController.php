@@ -20,10 +20,18 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::select('id', 'name', 'nickname', 'email', 'created_at')
-        ->paginate(5);
+        $query = User::select('id', 'name', 'nickname', 'email', 'created_at')
+        ->orderByDesc('updated_at')
+        ->orderByDesc('created_at');
+
+        if ($request->has('search')) {
+            $query->where('users.name', 'like', '%' . $request->input('search') . '%')
+                ->orWhere('users.nickname', 'like', '%' . $request->input('search') . '%');
+        }
+
+        $users = $query->paginate(10);
         return view('owner.users.index', compact('users'));
     }
 
@@ -102,7 +110,7 @@ class UsersController extends Controller
         return redirect()
             ->route('owner.users.index')
             ->with([
-                'message' => 'オーナー情報を更新しました',
+                'message' => 'ユーザー情報を更新しました',
                 'status' => 'info',
             ]);
     }
@@ -119,20 +127,34 @@ class UsersController extends Controller
         return redirect()
             ->route('owner.users.index')
             ->with([
-                'message' => 'オーナーを削除しました',
+                'message' => 'ユーザーを削除しました',
                 'status' => 'alert',
             ]);
     }
 
-    public function expiredUserIndex()
+    public function expiredUserIndex(Request $request)
     {
-        $expiredUsers = User::onlyTrashed()->get();
+        $query= User::onlyTrashed()
+        ->orderByDesc('deleted_at');
+        
+        if ($request->has('search')) {
+            $query->where('users.name', 'like', '%' . $request->input('search') . '%')
+            ->orWhere('users.nickname', 'like', '%' . $request->input('search') . '%');
+        }
+        
+        $expiredUsers = $query->paginate(10);
         return view('owner.expired-users', compact('expiredUsers'));
     }
 
     public function expiredUserDestroy($id)
     {
         User::onlyTrashed()->findOrFail($id)->forceDelete();
+        return redirect()->route('owner.expired-users.index');
+    }
+
+    public function expiredUserRestore($id)
+    {
+        User::onlyTrashed()->findOrFail($id)->restore();
         return redirect()->route('owner.expired-users.index');
     }
 }

@@ -12,6 +12,12 @@
           <section class="text-gray-600 body-font">
             <div class="container md:px-5 mx-auto">
               <x-flash-message status="session('status)" />
+              {{-- 検索フォームstart --}}
+              <form method="get" action="{{ route('owner.users.index') }}" class="flex">
+                <input type="text" name="search" placeholder="ユーザーを検索" class="mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <button type="submit" value="検索" class="bg-gray-400 hover:bg-gray-300 text-white rounded px-2 py-1">探す</button>
+              </form>
+              {{-- 検索フォームend --}}
               <div class="flex justify-end mb-4">
                 <button onclick="location.href='{{ route('owner.users.create') }}'" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">新規登録</button>
               </div>

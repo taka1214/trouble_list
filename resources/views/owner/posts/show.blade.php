@@ -42,6 +42,20 @@
                   </div>
                   @endif
 
+                  <div class="p-2 w-2/3 mx-auto">
+                    <div class="relative">
+                      <p class="text-right text-xs text-gray-400">
+                        {{-- 投稿した人を表示start --}}
+                        @if($postUser)
+                        {{ 'posted by ' . $postUser->nickname ?? $postUser->name }}
+                        @else
+                        {{ 'posted by ' . $postOwner->name }}
+                        @endif
+                        {{-- 投稿した人を表示end --}}
+                      </p>
+                    </div>
+                  </div>
+
                   <div class="p-2 w-full mt-4 flex justify-around">
                     <button type="button" onclick="location.href='{{ route('owner.posts.index') }}'" class="bg-gray-200 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg">一覧に戻る</button>
                     @if(Auth::id() === $post->owner_id)
@@ -84,6 +98,25 @@
                           </div>
                           @endif
                         </li>
+
+                        <div class="flex flex-row-reverse">
+                          {{-- replyした人を表示start --}}
+                          @php
+                          $user = \App\Models\User::find($reply->user_id);
+                          $owner = \App\Models\Owner::find($reply->owner_id);
+                          @endphp
+                          @if($user)
+                          <p class="text-right text-xs text-gray-400">{{ $user->nickname ?? $user->name }}</p>
+                          @else
+                          <p class="text-right text-xs text-gray-400">{{ $owner->name }}</p>
+                          @endif
+                          {{-- replyした人を表示end --}}
+
+                          {{-- replyの最終更新日start --}}
+                          <p class="text-right text-xs mr-1 text-gray-400">{{ $reply->updated_at ? $reply->updated_at->format('Y年m月d日 H時i分') : $reply->created_at->format('Y年m月d日 H時i分') }}</p>
+                          {{-- replyの最終更新日end --}}
+                        </div>
+
                         @empty
                         <p>まだ返信はありません</p>
                         @endforelse
@@ -110,7 +143,6 @@
                     <button type="button" onclick="location.href='{{ route('owner.posts.index') }}'" class="bg-gray-200 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg">一覧に戻る</button>
                   </div>
                 </div>
-
               </div>
             </div>
           </section>

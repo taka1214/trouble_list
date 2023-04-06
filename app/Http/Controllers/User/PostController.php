@@ -22,7 +22,18 @@ class PostController extends Controller
         // $posts = User::find(1)->posts;
         // $user = Post::find(3)->user;
         // dd($posts, $user);
-        $posts = Post::select('id', 'title', 'body', 'image_file', 'created_at')->get();
+        $query = Post::leftJoin('replies', 'posts.id', '=', 'replies.post_id')
+            ->select('posts.id', 'posts.title', 'posts.body', 'posts.image_file', 'posts.created_at')
+            ->selectRaw('GREATEST(posts.updated_at, COALESCE(MAX(replies.updated_at), \'2000-01-01\')) as sort_date')
+            ->groupBy('posts.id', 'posts.title', 'posts.body', 'posts.image_file', 'posts.created_at')
+            ->orderByDesc('sort_date');
+
+        if ($request->has('search')) {
+            $query->where('posts.title', 'like', '%' . $request->input('search') . '%')
+                ->orWhere('posts.body', 'like', '%' . $request->input('search') . '%');
+        }
+
+        $posts = $query->paginate(10);
         return view('user.posts.index', compact('posts'));
     }
 
@@ -33,26 +44,27 @@ class PostController extends Controller
 
     public function store(PostRequest $request)
     {
-        if($request->hasFile('image_file')) {
-            Post::create([
-                'title' => $request->title,
-                'body' => $request->body,
-                'image_file' => $request->file('image_file')->store('public/images'),
+        Post::create([
+            'title' => $request->title,
+            'body' => $request->body,
+            'user_id' => $request->user()->id,
+            'image_file' => $request->hasFile('image_file') ? $request->file('image_file')->store('public/images') : null,
+        ]);
+
+        return to_route('user.posts.index')
+            ->with([
+                'message' => '投稿が完了しました',
+                'status' => 'info',
             ]);
-        } else {
-            Post::create([
-                'title' => $request->title,
-                'body' => $request->body,
-            ]);
-        }
-        return to_route('user.posts.index');
     }
 
     public function show($id)
     {
         $post = Post::find($id);
         $replies = Post::find($id)->replies;
-        return view('user.posts.show', compact('post', 'replies'));
+        $postUser = Post::find($id)->user;
+        $postOwner = Post::find($id)->owner;
+        return view('user.posts.show', compact('post', 'replies', 'postUser', 'postOwner'));
     }
 
     public function edit($id)
@@ -64,23 +76,27 @@ class PostController extends Controller
     public function update(PostRequest $request, $id)
     {
         $post = Post::find($id);
-        if (!empty($post->image_file)) {
+
+        if ($request->input('delete_image')) {
             Storage::delete($post->image_file);
+            $post->image_file = null;
         }
-        if($request->hasFile('image_file')) {
+
+        if ($request->hasFile('image_file')) {
             $image_file = $request->file('image_file')->store('public/images');
             $post->image_file = str_replace('public/', '', $image_file);
-        }        
+        }
+
         $post->title = $request->title;
         $post->body = $request->body;
         $post->save();
 
         return redirect()
-        ->route('user.posts.index')
-        ->with([
-            'message' =>'投稿を更新しました',
-            'status' => 'info',
-        ]);
+            ->route('user.posts.index')
+            ->with([
+                'message' => '投稿を更新しました',
+                'status' => 'info',
+            ]);
     }
 
     public function destroy($id)
@@ -88,10 +104,10 @@ class PostController extends Controller
         Post::find($id)->delete();
 
         return redirect()
-        ->route('user.posts.index')
-        ->with([
-            'message' => '投稿を削除しました',
-            'status' => 'alert',
-        ]);
+            ->route('user.posts.index')
+            ->with([
+                'message' => '投稿を削除しました',
+                'status' => 'alert',
+            ]);
     }
 }
