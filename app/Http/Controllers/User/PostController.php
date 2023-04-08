@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
-use App\Models\User;
+use App\Models\Like;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -15,6 +16,8 @@ class PostController extends Controller
     public function __construct()
     {
         $this->middleware('auth:users');
+        // only()の引数内のメソッドはログイン時のみ有効
+        $this->middleware(['auth', 'verified'])->only(['like', 'unlike']);
     }
 
     public function index(Request $request)
@@ -109,5 +112,30 @@ class PostController extends Controller
                 'message' => '投稿を削除しました',
                 'status' => 'alert',
             ]);
+    }
+
+    public function like($id)
+    {
+        $like = Like::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
+
+        if (!$like) {
+            Like::create([
+                'post_id' => $id,
+                'user_id' => Auth::user()->id,
+            ]);
+        }
+
+        return redirect()->back();
+    }
+
+    public function unlike($id)
+    {
+        $like = Like::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
+
+        if ($like) {
+            $like->delete();
+        }
+
+        return redirect()->back();
     }
 }

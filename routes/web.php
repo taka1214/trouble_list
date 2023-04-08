@@ -30,6 +30,9 @@ Route::middleware('auth:users')->group(function () {
     // Route::delete('/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+    
+    Route::get('/post/like/{id}', [PostController::class, 'like'])->name('posts.like');
+    Route::get('/post/unlike/{id}', [PostController::class, 'unlike'])->name('posts.unlike');
 });
 
 Route::middleware(['auth:users', 'verified'])->group(function () {

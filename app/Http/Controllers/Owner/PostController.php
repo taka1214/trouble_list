@@ -5,10 +5,7 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
-use App\Models\User;
-use App\Models\Owner;
 use App\Http\Requests\PostRequest;
-use App\Models\Reply;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -100,7 +97,6 @@ class PostController extends Controller
                 'status' => 'info',
             ]);
     }
-
 
     public function destroy($id)
     {
