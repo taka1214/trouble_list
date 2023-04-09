@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Owner\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Owner\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Owner\Auth\EmailVerificationNotificationController;
@@ -13,6 +12,7 @@ use App\Http\Controllers\Owner\Auth\VerifyEmailController;
 use App\Http\Controllers\Owner\UsersController;
 use App\Http\Controllers\Owner\PostController;
 use App\Http\Controllers\Owner\ReplyController;
+use App\Http\Controllers\Owner\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('owner.welcome');
+    return view('owner.auth.login');
 });
 
 Route::resource('users', UsersController::class)
@@ -56,7 +56,7 @@ Route::get('/dashboard', function () {
     return view('owner.dashboard');
 })->middleware(['auth:owners', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:owners')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

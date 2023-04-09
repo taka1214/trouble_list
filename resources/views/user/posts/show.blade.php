@@ -47,9 +47,9 @@
                       <p class="text-right text-xs text-gray-400">
                         {{-- 投稿した人を表示start --}}
                         @if($postUser)
-                        {{ $postUser->nickname ?? $postUser->name }}
+                        {{ 'posted by ' . $postUser->nickname ?? $postUser->name }}
                         @else
-                        {{ $postOwner->name }}
+                        {{ 'posted by ' . $postOwner->nickname ?? $postOwner->name }}
                         @endif
                         {{-- 投稿した人を表示end --}}
                       </p>

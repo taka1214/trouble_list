@@ -49,7 +49,7 @@
                         @if($postUser)
                         {{ 'posted by ' . $postUser->nickname ?? $postUser->name }}
                         @else
-                        {{ 'posted by ' . $postOwner->name }}
+                        {{ 'posted by ' . $postOwner->nickname ?? $postOwner->name }}
                         @endif
                         {{-- 投稿した人を表示end --}}
                       </p>

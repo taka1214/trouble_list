@@ -41,38 +41,19 @@
                       <td class="md:px-4 py-3 text-center">
                         <button onclick="location.href='{{ route('user.posts.show', ['post' => $post->id]) }}'" class="text-white bg-indigo-400 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-500 rounded text-lg">詳細</button>
                       </td>
-
-
                       <td class="md:px-4 py-3 text-center">
                         @if($post->is_liked_by_auth_user())
-                        <a href="{{ route('user.posts.unlike', ['id' => $post->id]) }}" class="btn btn-success btn-sm text-red-500">
-                          <i class="fa-regular fa-hand"></i>
-                          <span class="badge">{{ $post->likes->count() }}</span>
+                        <a href="{{ route('user.posts.unlike', ['id' => $post->id]) }}" class="btn btn-success btn-sm">
+                          <i class="fa-regular fa-hand text-indigo-500"></i>
+                          <span class="badge text-xs">{{ $post->likes->count() }}</span>
                         </a>
                         @else
                         <a href="{{ route('user.posts.like', ['id' => $post->id]) }}" class="btn btn-secondary btn-sm">
                           <i class="fa-regular fa-hand"></i>
-                          <span class="badge">{{ $post->likes->count() }}</span>
+                          <span class="badge text-xs">{{ $post->likes->count() }}</span>
                         </a>
                         @endif
                       </td>
-
-
-                      {{--
-                      <td class="md:px-4 py-3 text-center">
-                        @if($post->is_liked_by_auth_user())
-                        <a href="{{ route('user.post.unlike', ['id' => $post->id]) }}?t={{ time() }}" class="btn btn-secondary btn-sm" onclick="toggleLike(event, this)">
-                      <span class="badge">{{ $post->likes->count() }}</span>
-                      <span class="heart">&hearts;</span>
-                      </a>
-                      @else
-                      <a href="{{ route('user.post.like', ['id' => $post->id]) }}?t={{ time() }}" class="btn btn-secondary btn-sm" onclick="toggleLike(event, this)">
-                        <span class="badge">{{ $post->likes->count() }}</span>
-                        <span class="heart">&hearts;</span>
-                      </a>
-                      @endif
-                      </td>
-                      --}}
                     </tr>
                     @endforeach
                   </tbody>
