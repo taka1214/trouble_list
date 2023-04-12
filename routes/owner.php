@@ -47,7 +47,7 @@ Route::middleware(['auth:owners', 'verified'])->group(function () {
 });
 
 Route::prefix('expired-users')->middleware('auth:owners')->group(function () {
-    Route::get('index', [UsersController::class, 'expiredUserIndex'])->name('expired-users.index');
+    Route::get('/index', [UsersController::class, 'expiredUserIndex'])->name('expired-users.index');
     Route::post('destroy/{user}', [UsersController::class, 'expiredUserDestroy'])->name('expired-users.destroy');
     Route::put('restore/{user}', [UsersController::class, 'expiredUserRestore'])->name('expired-users.restore');
 });

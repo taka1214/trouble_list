@@ -12,14 +12,14 @@
           <section class="text-gray-600 body-font">
             <div class="container px-5 mx-auto">
               <x-flash-message status="session('status)" />
-              {{-- 検索フォームstart --}}
-              <form method="get" action="{{ route('owner.expired-users.index') }}" class="flex">
-                <input type="text" name="search" placeholder="ユーザーを検索" class="mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                <button type="submit" value="検索" class="bg-gray-400 hover:bg-gray-300 text-white rounded px-2 py-1">探す</button>
-              </form>
-              {{-- 検索フォームend --}}
               <div class="lg:w-2/3 w-full mx-auto mt-2 overflow-auto">
-                <table class="table-auto w-full text-left whitespace-no-wrap">
+                {{-- 検索フォームstart --}}
+                <form method="get" action="{{ route('owner.expired-users.index') }}" class="flex">
+                  <input type="text" name="search" placeholder="ユーザーを検索" class="mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                  <button type="submit" value="検索" class="bg-gray-400 hover:bg-gray-300 text-white rounded px-2 py-1">探す</button>
+                </form>
+                {{-- 検索フォームend --}}
+                <table class="table-auto w-full mt-4 text-left whitespace-no-wrap">
                   <thead>
                     <tr>
                       <th class="md:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">名前</th>

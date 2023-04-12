@@ -19,11 +19,16 @@ class Reply extends Model
 
     public function posts()
     {
-        return $this->BelongsTo(Post::class);
+        return $this->belongsTo(Post::class);
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(Owner::class);
     }
 }

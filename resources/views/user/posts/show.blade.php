@@ -47,9 +47,9 @@
                       <p class="text-right text-xs text-gray-400">
                         {{-- 投稿した人を表示start --}}
                         @if($postUser)
-                        {{ 'posted by ' . $postUser->nickname ?? $postUser->name }}
-                        @else
-                        {{ 'posted by ' . $postOwner->nickname ?? $postOwner->name }}
+                        {{ $postUser->nickname ? 'posted by ' . $postUser->nickname : 'posted by ' . $postUser->name }}
+                        @elseif($postOwner)
+                        {{ $postOwner->nickname ? 'posted by ' . $postOwner->nickname : 'posted by ' .$postOwner->name }}
                         @endif
                         {{-- 投稿した人を表示end --}}
                       </p>
@@ -107,8 +107,8 @@
                           @endphp
                           @if($user)
                           <p class="text-right text-xs text-gray-400">{{ $user->nickname ?? $user->name }}</p>
-                          @else
-                          <p class="text-right text-xs text-gray-400">{{ $owner->name }}</p>
+                          @elseif ($owner)
+                          <p class="text-right text-xs text-gray-400">{{ $owner->nickname ?? $owner->name }}</p>
                           @endif
                           {{-- replyした人を表示end --}}
 
