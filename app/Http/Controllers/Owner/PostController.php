@@ -12,7 +12,7 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
-        // 返信の日時を気にせずに投稿だけを見る場合の一覧順序(更新が新しい順)
+        // 返信の日時を気にせずに投稿だけの日時を見る場合の一覧順序(更新が新しい順)
         // $posts = Post::select('id', 'title', 'body', 'image_file', 'created_at', 'updated_at')
         // ->orderByDesc('updated_at')
         // ->orderByDesc('created_at')

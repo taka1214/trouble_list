@@ -22,6 +22,7 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
+        // 使い方の例
         // $posts = User::find(1)->posts;
         // $user = Post::find(3)->user;
         // dd($posts, $user);
@@ -125,7 +126,7 @@ class PostController extends Controller
             ]);
         }
 
-        return redirect()->back();
+        return redirect()->route('user.posts.index');
     }
 
     public function unlike($id)
@@ -136,6 +137,6 @@ class PostController extends Controller
             $like->delete();
         }
 
-        return redirect()->back();
+        return redirect()->route('user.posts.index');
     }
 }

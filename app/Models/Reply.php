@@ -15,6 +15,7 @@ class Reply extends Model
         'post_id',
         'user_id',
         'owner_id',
+        'image_file',
     ];
 
     public function posts()

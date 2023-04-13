@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\Reply;
 use App\Http\Requests\ReplyRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ReplyController extends Controller
 {
@@ -29,6 +30,7 @@ class ReplyController extends Controller
             'post_id' => $request->post_id,
             'owner_id' => Auth::user()->id,
             'message' => $request->message,
+            'image_file' => $request->hasFile('image_file') ? $request->file('image_file')->store('public/images') : null,
         ]);
         $reply->save();
 
@@ -48,6 +50,17 @@ class ReplyController extends Controller
     public function update(ReplyRequest $request, $id)
     {
         $reply = Reply::find($id);
+
+        if ($request->input('delete_image')) {
+            Storage::delete($reply->image_file);
+            $reply->image_file = null;
+        }
+
+        if ($request->hasFile('image_file')) {
+            $image_file = $request->file('image_file')->store('public/images');
+            $reply->image_file = str_replace('public/', '', $image_file);
+        }
+
         $reply->message = $request->message;
         $reply->save();
 
