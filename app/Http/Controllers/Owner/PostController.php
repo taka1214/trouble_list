@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\Image;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,14 +44,23 @@ class PostController extends Controller
 
     public function store(PostRequest $request)
     {
-        Post::create([
+        $post = Post::create([
             'title' => $request->title,
             'body' => $request->body,
             'owner_id' => $request->user()->id,
-            'image_file' => $request->hasFile('image_file') ? $request->file('image_file')->store('public/images') : null,
         ]);
 
-        return to_route('owner.posts.index')
+        if ($request->hasFile('image_files')) {
+            foreach ($request->file('image_files') as $image_file) {
+                $file_path = $image_file->store('public/images');
+                Image::create([
+                    'post_id' => $post->id,
+                    'file_path' => $file_path,
+                ]);
+            }
+        }
+
+        return redirect()->route('owner.posts.index')
             ->with([
                 'message' => '投稿が完了しました',
                 'status' => 'info',
@@ -76,14 +86,25 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 
-        if ($request->input('delete_image')) {
-            Storage::delete($post->image_file);
-            $post->image_file = null;
+        // 画像の削除処理
+        if ($request->input('delete_images')) {
+            foreach ($request->input('delete_images') as $image_id) {
+                $image = Image::find($image_id);
+                if ($image) {
+                    Storage::delete($image->file_path);
+                    $image->delete();
+                }
+            }
         }
 
-        if ($request->hasFile('image_file')) {
-            $image_file = $request->file('image_file')->store('public/images');
-            $post->image_file = str_replace('public/', '', $image_file);
+        // 画像の追加処理
+        if ($request->hasFile('image_files')) {
+            foreach ($request->file('image_files') as $image_file) {
+                $file_path = $image_file->store('public/images');
+                $post->images()->create([
+                    'file_path' => str_replace('public/', '', $file_path),
+                ]);
+            }
         }
 
         $post->title = $request->title;

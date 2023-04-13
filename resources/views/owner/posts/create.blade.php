@@ -34,12 +34,12 @@
                     </div>
                     <div class="p-2 w-1/2 mx-auto">
                       <div class="relative">
-                        <label for="image_file" class="leading-7 text-sm text-gray-600">画像</label>
-                        <input type="file" name="image_file">
-                        <x-input-error :messages="$errors->get('image_file')" class="mt-2" />
+                        <label for="image_files" class="leading-7 text-sm text-gray-600">画像</label>
+                        <input type="file" id="image_files" name="image_files[]" multiple>
+                        <x-input-error :messages="$errors->get('image_files.*')" class="mt-2" />
                       </div>
                     </div>
-                    
+
                     <div class="p-2 w-full mt-4 flex justify-around">
                       <button type="button" onclick="location.href='{{ route('owner.posts.index') }}'" class="bg-gray-200 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg">戻る</button>
                       <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>

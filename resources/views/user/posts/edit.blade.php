@@ -35,16 +35,18 @@
                     </div>
                     <div class="p-2 w-1/2 mx-auto">
                       <div class="relative">
-                        <label for="image_file" class="leading-7 text-sm text-gray-600">画像</label>
-                        @if ($post['image_file'])
-                        <img src="{{ Storage::url($post['image_file']) }}">
-                        <div class="mt-2">
-                          <input type="checkbox" id="delete_image" name="delete_image" value="1">
-                          <label for="delete_image" class="text-sm text-gray-600">現在の画像を削除する</label>
+                        <label for="image_files" class="leading-7 text-sm text-gray-600">画像</label>
+                        @foreach($post->images as $image)
+                        <div>
+                          <img src="{{ Storage::url($image->file_path) }}">
+                          <div class="mt-2">
+                            <input type="checkbox" id="delete_images_{{ $image->id }}" name="delete_images[]" value="{{ $image->id }}">
+                            <label for="delete_images_{{ $image->id }}" class="text-sm text-gray-600">この画像を削除する</label>
+                          </div>
                         </div>
-                        @endif
-                        <input type="file" name="image_file">
-                        <x-input-error :messages="$errors->get('image_file')" class="mt-2" />
+                        @endforeach
+                        <input type="file" id="image_files" name="image_files[]" multiple>
+                        <x-input-error :messages="$errors->get('image_files.*')" class="mt-2" />
                       </div>
                     </div>
 
