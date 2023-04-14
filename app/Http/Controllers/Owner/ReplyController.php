@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Post;
 use App\Models\Reply;
+use App\Models\ReplyImage;
 use App\Http\Requests\ReplyRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -30,9 +29,20 @@ class ReplyController extends Controller
             'post_id' => $request->post_id,
             'owner_id' => Auth::user()->id,
             'message' => $request->message,
-            'image_file' => $request->hasFile('image_file') ? $request->file('image_file')->store('public/images') : null,
         ]);
-        $reply->save();
+
+        // $reply->save();
+
+        if ($request->hasFile('image_files')) {
+            foreach ($request->file('image_files') as $image_file) {
+                $file_path = $image_file->store('public/images');
+
+                ReplyImage::create([
+                    'reply_id' => $reply->id,
+                    'file_path' => $file_path,
+                ]);
+            }
+        }
 
         return to_route('owner.posts.show', [$reply['post_id']])
             ->with([
@@ -51,24 +61,33 @@ class ReplyController extends Controller
     {
         $reply = Reply::find($id);
 
+        // 既存の画像の削除
         if ($request->input('delete_image')) {
-            Storage::delete($reply->image_file);
-            $reply->image_file = null;
+            foreach ($request->input('delete_image') as $image_id => $value) {
+                $image = ReplyImage::find($image_id);
+                Storage::delete($image->file_path);
+                $image->delete();
+            }
         }
 
-        if ($request->hasFile('image_file')) {
-            $image_file = $request->file('image_file')->store('public/images');
-            $reply->image_file = str_replace('public/', '', $image_file);
+        // 新しい画像の追加
+        if ($request->hasFile('new_image_file')) {
+            foreach ($request->file('new_image_file') as $file) {
+                $file_path = $file->store('public/images');
+                $reply->images()->create([
+                    'file_path' => str_replace('public/', '', $file_path),
+                ]);
+            }
         }
 
         $reply->message = $request->message;
         $reply->save();
 
         return to_route('owner.posts.show', [$reply['post_id']])
-        ->with([
-            'message' => '返信を更新しました。',
-            'status' => 'info',
-        ]);
+            ->with([
+                'message' => '返信を更新しました。',
+                'status' => 'info',
+            ]);
     }
 
     public function destroy($id)
@@ -77,9 +96,9 @@ class ReplyController extends Controller
         $reply->delete();
 
         return to_route('owner.posts.show', [$reply['post_id']])
-        ->with([
-            'message' => '返信を削除しました。',
-            'status' => 'alert',
-        ]);
+            ->with([
+                'message' => '返信を削除しました。',
+                'status' => 'alert',
+            ]);
     }
 }
