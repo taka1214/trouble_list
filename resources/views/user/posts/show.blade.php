@@ -72,7 +72,7 @@
                       <form id="delete_{{ $post->id }}" method="post" action="{{ route('user.posts.destroy', ['post' => $post->id ]) }}">
                         @csrf
                         @method('DELETE')
-                        <button data-id="{{ $post->id }}" onclick="deletePost(this)" class="text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">削除</button>
+                        <button data-id="{{ $post->id }}" onclick="return deletePost(this);" class="text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">削除</button>
                       </form>
                     </div>
                     @endif
@@ -86,7 +86,7 @@
                         <!-- もし投稿に返信があるなら表示start -->
                         @forelse ($replies as $reply)
                         <li id="body{{ $reply->id }}" class="w-full rounded bg-gray-100 bg-opacity-50 border-b-2 border-gray-100 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out list-none">
-                          <di class="show_reply">
+                          <div class="show_reply">
                             <div id="reply{{ $reply->id }}" class="reply-message">
                               {{ $reply->message }}
                             </div>
@@ -94,26 +94,25 @@
                             <img id="image_file" src="{{ Storage::url($image->file_path) }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                             @endforeach
 
+                            <!-- ログインしている人と返信の投稿者が同じならstart -->
                             @if(Auth::id() === $reply->user_id)
                             <div class="flex justify-end mt-2">
                               <button onclick="editReply({{ $reply->id }})" class="text-white bg-indigo-500 border-0 py-1 px-2 focus:outline-none hover:bg-indigo-600 rounded text-lg mr-2">編集</button>
                               <form id="destroy_{{ $reply->id }}" method="post" action="{{ route('user.replies.destroy', ['reply' => $reply->id ]) }}">
                                 @csrf
                                 @method('DELETE')
-                                <button data-id="{{ $reply->id }}" onclick="deleteReply(this)" class="text-white bg-red-500 border-0 py-1 px-2 focus:outline-none hover:bg-red-600 rounded text-lg">削除</button>
+                                <button data-id="{{ $reply->id }}" onclick="return deletePost(this)" class="text-white bg-red-500 border-0 py-1 px-2 focus:outline-none hover:bg-red-600 rounded text-lg">削除</button>
                               </form>
                             </div>
+                            @endif
+                            <!-- ログインしている人と返信の投稿者が同じならend -->
 
                             <div>
                               <!-- replyした人を表示start -->
-                              @php
-                              $user = \App\Models\User::find($reply->user_id);
-                              $owner = \App\Models\Owner::find($reply->owner_id);
-                              @endphp
-                              @if($user)
-                              <p class="text-right text-xs text-gray-400">{{ $user->nickname ?? $user->name }}</p>
-                              @elseif ($owner)
-                              <p class="text-right text-xs text-gray-400">{{ $owner->nickname ?? $owner->name }}</p>
+                              @if(isset($reply->owner))
+                              <p class="text-right text-xs text-gray-400">{{ $reply->owner->nickname ? $reply->owner->nickname : $reply->owner->name }}</p>
+                              @elseif (isset($reply->user))
+                              <p class="text-right text-xs text-gray-400">{{ $reply->user->nickname ? $reply->user->nickname : $reply->user->name }}</p>
                               @endif
                               <!-- replyした人を表示end -->
 
@@ -121,125 +120,87 @@
                               <p class="text-right text-xs mr-1 text-gray-400">{{ $reply->updated_at ? $reply->updated_at->format('Y年m月d日 H時i分') : $reply->created_at->format('Y年m月d日 H時i分') }}</p>
                               <!-- replyの最終更新日end -->
                             </div>
+                          </div>
+
+                          <!-- 返信の更新フォームstart -->
+                          <div id="edit{{ $reply->id }}" class="hidden">
+                            <form method="post" action="{{ route('user.replies.update', ['reply' => $reply->id ]) }}" enctype="multipart/form-data">
+                              @csrf
+                              @method('PUT')
+                              <textarea name="message" class="w-full rounded bg-gray-100 bg-opacity-50 border-b-2 border-gray-100 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">{{ $reply->message }}</textarea>
+
+                              <!-- もしreplyに画像があれば表示start -->
+                              <!-- 既存の画像を表示 -->
+                              @if ($reply->images->count() > 0)
+                              @foreach ($reply->images as $image)
+                              <label for="image_file" class="leading-7 text-sm text-gray-600">画像</label>
+                              <img id="image_file" src="{{ Storage::url($image->file_path) }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                              <div class="mt-2">
+                                <input type="checkbox" id="delete_image_{{ $image->id }}" name="delete_image[{{ $image->id }}]" value="1">
+                                <label for="delete_image_{{ $image->id }}" class="text-sm text-gray-600">現在の画像を削除する</label>
+                              </div>
+                              @endforeach
+                              @endif
+                              <!-- もしreplyに画像があれば表示end -->
+                              <!-- 新しい画像を追加するためのファイル入力フィールド -->
+                              <label for="image_file" class="leading-7 text-sm text-gray-600">新しい画像を追加</label>
+                              <input type="file" name="new_image_file[]" multiple>
+                              <x-input-error :messages="$errors->get('new_image_file')" class="mt-2" />
+                              <div class="flex justify-center mt-2">
+                                <button type="submit" class="text-white bg-indigo-500 border-0 py-1 px-2 focus:outline-none hover:bg-indigo-600 rounded text-lg">更新</button>
+                              </div>
+                            </form>
+                            <div class="flex justify-center mt-2">
+                              <button id="cancelEditReply{{ $reply->id }}" onclick="cancelEditReply({{ $reply->id }})" class="text-white bg-indigo-500 border-0 py-1 px-2 focus:outline-none hover:bg-indigo-600 rounded text-lg">キャンセル</button>
+                            </div>
+                          </div>
+                          <!-- 返信の更新フォームend -->
+                        </li>
+
+                        @empty
+                        <p>まだ返信はありません</p>
+                        @endforelse
+                        <!-- もし投稿に返信があるなら表示end -->
+                      </ul>
                     </div>
+                  </div>
 
-                    <!-- 返信の更新フォームstart -->
-                    <div id="edit{{ $reply->id }}" class="hidden">
-                      <form method="post" action="{{ route('user.replies.update', ['reply' => $reply->id ]) }}" enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')
-                        <textarea name="message" class="w-full rounded bg-gray-100 bg-opacity-50 border-b-2 border-gray-100 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">{{ $reply->message }}</textarea>
-
-                        <!-- もしreplyに画像があれば表示start -->
-                        <!-- 既存の画像を表示 -->
-                        @if ($reply->images->count() > 0)
-                        @foreach ($reply->images as $image)
-                        <label for="image_file" class="leading-7 text-sm text-gray-600">画像</label>
-                        <img id="image_file" src="{{ Storage::url($image->file_path) }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                        <div class="mt-2">
-                          <input type="checkbox" id="delete_image_{{ $image->id }}" name="delete_image[{{ $image->id }}]" value="1">
-                          <label for="delete_image_{{ $image->id }}" class="text-sm text-gray-600">現在の画像を削除する</label>
-                        </div>
-                        @endforeach
-                        @endif
-                        <!-- もしreplyに画像があれば表示end -->
-                        <!-- 新しい画像を追加するためのファイル入力フィールド -->
-                        <label for="image_file" class="leading-7 text-sm text-gray-600">新しい画像を追加</label>
-                        <input type="file" name="new_image_file[]" multiple>
-                        <x-input-error :messages="$errors->get('new_image_file')" class="mt-2" />
-                        <div class="flex justify-center mt-2">
-                          <button type="submit" class="text-white bg-indigo-500 border-0 py-1 px-2 focus:outline-none hover:bg-indigo-600 rounded text-lg">更新</button>
-                        </div>
-                      </form>
-                      <div class="flex justify-center mt-2">
-                        <button id="cancelEditReply{{ $reply->id }}" onclick="cancelEditReply({{ $reply->id }})" class="text-white bg-indigo-500 border-0 py-1 px-2 focus:outline-none hover:bg-indigo-600 rounded text-lg">キャンセル</button>
+                  <!-- 返信フォームstart -->
+                  <form method="post" action="{{ route('user.replies.store') }}" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="post_id" value="{{ $post->id }}">
+                    <div class="p-2 w-full sm:w-1/2 mx-auto">
+                      <div class="relative">
+                        <label for="message" class="leading-7 text-sm text-gray-600">返信を書く</label>
+                        <textarea id="message" name="message" rows="5" required class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">{{ old('message') }}</textarea>
+                        <x-input-error :messages="$errors->get('message')" class="mt-2" />
+                      </div>
+                      <div class="relative">
+                        <label for="image_files" class="leading-7 text-sm text-gray-600">画像</label>
+                        <input type="file" id="image_files" name="image_files[]" multiple>
+                        <x-input-error :messages="$errors->get('image_files.*')" class="mt-2" />
                       </div>
                     </div>
-                    @endif
-                    <!-- 返信の更新フォームend -->
-                    </li>
-
-                    @empty
-                    <p>まだ返信はありません</p>
-                    @endforelse
-                    <!-- もし投稿に返信があるなら表示end -->
-                    </ul>
-                  </div>
-                </div>
-
-                <!-- 返信フォームstart -->
-                <form method="post" action="{{ route('user.replies.store') }}" enctype="multipart/form-data">
-                  @csrf
-                  <input type="hidden" name="post_id" value="{{ $post->id }}">
-                  <div class="p-2 w-full sm:w-1/2 mx-auto">
-                    <div class="relative">
-                      <label for="message" class="leading-7 text-sm text-gray-600">返信を書く</label>
-                      <textarea id="message" name="message" rows="5" required class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">{{ old('message') }}</textarea>
-                      <x-input-error :messages="$errors->get('message')" class="mt-2" />
+                    <div class="p-2 w-full mt-4 flex justify-around">
+                      <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">返信する</button>
                     </div>
-                    <div class="relative">
-                      <label for="image_files" class="leading-7 text-sm text-gray-600">画像</label>
-                      <input type="file" id="image_files" name="image_files[]" multiple>
-                      <x-input-error :messages="$errors->get('image_files.*')" class="mt-2" />
-                    </div>
-                  </div>
+                  </form>
+                  <!-- 返信フォームend -->
+
                   <div class="p-2 w-full mt-4 flex justify-around">
-                    <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">返信する</button>
+                    <button type="button" onclick="location.href='{{ route('user.posts.index') }}'" class="bg-gray-200 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg">一覧に戻る</button>
                   </div>
-                </form>
-                <!-- 返信フォームend -->
-
-                <div class="p-2 w-full mt-4 flex justify-around">
-                  <button type="button" onclick="location.href='{{ route('user.posts.index') }}'" class="bg-gray-200 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg">一覧に戻る</button>
                 </div>
-              </div>
 
+              </div>
             </div>
+          </section>
         </div>
-        </section>
       </div>
     </div>
   </div>
-  </div>
 </x-app-layout>
 
-<script>
-  function deletePost(e) {
-    'use strict'
-    if (confirm('Are you sure?')) {
-      document.getElementById('delete_' + e.dataset.id).submit()
-    }
-  }
-
-  function deleteReply(e) {
-    'use strict'
-    if (confirm('Are you sure?')) {
-      document.getElementById('destroy_' + e.dataset.id).submit()
-    }
-  }
-
-  function editReply(replyId) {
-    'use strict'
-    document.getElementById('reply' + replyId).classList.add('hidden');
-    document.getElementById('edit' + replyId).classList.remove('hidden');
-
-    let targetShowReply = document.getElementById('body' + replyId).querySelector('.show_reply');
-    targetShowReply.classList.add('hidden');
-  }
-
-  function cancelEditReply(replyId) {
-    'use strict'
-    document.getElementById('reply' + replyId).classList.remove('hidden');
-    document.getElementById('edit' + replyId).classList.add('hidden');
-
-    let targetShowReply = document.getElementById('body' + replyId).querySelector('.show_reply');
-    targetShowReply.classList.remove('hidden');
-  }
-
-  function deleteReply(e) {
-    'use strict'
-    if (confirm('Are you sure?')) {
-      document.getElementById('destroy_' + e.dataset.id).submit()
-    }
-  }
-</script>
+<script src="{{ asset('/js/deleteButton.js') }}"></script>
+<script src="{{ asset('/js/editReply.js') }}"></script>
+<script src="{{ asset('/js/cancelEditReply.js') }}"></script>

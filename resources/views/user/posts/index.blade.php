@@ -29,7 +29,7 @@
                     <tr>
                       <th class="px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">タイトル</th>
                       <th class="hidden md:table-cell px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">本文</th>
-                      <th class="hidden md:table-cell px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100"><i class="fa-regular fa-clock"></i></th>
+                      <th class="hidden md:table-cell px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">投稿日時</th>
                       <th class="px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th>
                       <th class="px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th>
                     </tr>
@@ -37,8 +37,8 @@
                   <tbody>
                     @foreach ($posts as $post)
                     <tr>
-                      <td class="px-2 sm:px-4 py-3">{{ $post->title }}</td>
-                      <td class="hidden md:table-cell px-2 sm:px-4 py-3">{{ $post->body }}</td>
+                      <td class="px-2 sm:px-4 py-3">{{ Str::limit($post->title, 25, '…' ) }}</td>
+                      <td class="hidden md:table-cell px-2 sm:px-4 py-3">{{ Str::limit($post->body, 60, '…' ) }}</td>
                       <td class="hidden md:table-cell text-sm px-2 sm:px-4 py-3">{{ $post->created_at->format('m/d/H:i') }}</td>
                       <td class="px-2 sm:px-4 py-3 text-center">
                         <button onclick="location.href='{{ route('user.posts.show', ['post' => $post->id]) }}'" class="text-white bg-indigo-400 border-0 py-1 px-3 focus:outline-none hover:bg-indigo-500 rounded text-md">詳細</button>
@@ -68,12 +68,5 @@
       </div>
     </div>
   </div>
-  <script>
-    function deletePost(e) {
-      'use strict';
-      if (confirm('Are you sure?')) {
-        document.getElementById('delete_' + e.dataset.id).submit();
-      }
-    }
-  </script>
+  <script src="{{ asset('/js/deleteButton.js') }}"></script>
 </x-app-layout>

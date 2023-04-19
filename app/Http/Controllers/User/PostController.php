@@ -74,12 +74,13 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = Post::find($id);
-        $replies = Post::find($id)->replies;
-        $postUser = Post::find($id)->user;
-        $postOwner = Post::find($id)->owner;
+        $post = Post::with('replies.user', 'replies.owner')->find($id);
+        $replies = $post->replies;
+        $postUser = $post->user;
+        $postOwner = $post->owner;
         return view('user.posts.show', compact('post', 'replies', 'postUser', 'postOwner'));
     }
+
 
     public function edit($id)
     {

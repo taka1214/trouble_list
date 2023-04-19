@@ -7,6 +7,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
 
 class PasswordResetLinkController extends Controller
 {
@@ -25,12 +27,15 @@ class PasswordResetLinkController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        Mail::to('globar173@gmail.com')
+        ->send(new TestMail());
+        
         $request->validate([
             'email' => ['required', 'email'],
         ]);
 
         // Use broker method to specify the users broker
-        $status = Password::broker('users')->sendResetLink(
+        $status = Password::sendResetLink(
             $request->only('email')
         );
 

@@ -12,6 +12,7 @@
             @elseif(session('status') === 'profile-updated')
             <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)" class="text-sm text-gray-600 bg-blue-300 text-white">プロフィールが更新されました</p>
             @endif
+            
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     @include('user.profile.partials.update-profile-information-form')

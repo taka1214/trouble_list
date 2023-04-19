@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Reply extends Model
 {
@@ -18,9 +17,9 @@ class Reply extends Model
         'image_file',
     ];
 
-    public function posts()
+    public function post()
     {
-        return $this->belongsTo(Post::class);
+        return $this->belongsTo(App\Models\Post::class);
     }
 
     public function user()
