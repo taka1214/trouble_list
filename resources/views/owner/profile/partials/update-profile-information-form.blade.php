@@ -33,7 +33,7 @@
             <!-- <x-input-label for="nickname" :value="__('Nickname')" />
             <x-text-input id="nickname" name="nickname" type="text" class="mt-1 block w-full" :value="old('nickname', $user->nickname)" required autocomplete="nickname" />
             <x-input-error class="mt-2" :messages="$errors->get('nickname')" /> -->
-            <x-input-label for="nickname" value="ニックネーム" /><span class="text-xs text-gray-500">ニックネームが空欄の場合、お名前の方が投稿者として表示されます。</span>
+            <x-input-label for="nickname" value="ニックネーム" /><span class="text-xs text-gray-500">ニックネームが空欄の場合、お名前が投稿者として表示されます。</span>
             <x-text-input id="nickname" name="nickname" type="text" class="mt-1 block w-full" :value="old('nickname', $user->nickname)" autocomplete="nickname" />
             <x-input-error class="mt-2" :messages="$errors->get('nickname')" />
         </div>

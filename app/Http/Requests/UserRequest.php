@@ -26,10 +26,11 @@ class UserRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:50'],
+            'nickname' => ['nullable','string', 'max:25'],
+            'room_number' => ['string', 'max:4'],
             'email' => ['nullable', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', 'min:8'],
-            'nickname' => ['nullable','string', 'max:25'],
         ];
     
         if (empty($this->nickname)) {

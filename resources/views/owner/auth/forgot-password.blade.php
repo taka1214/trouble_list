@@ -1,6 +1,7 @@
 <x-guest-layout>
     <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+        <!-- {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }} -->
+        パスワードを忘れた場合でも心配ありません。メールアドレスをお知らせいただければ、パスワードリセット用のリンクをメールで送信いたします。そのリンクを使用して新しいパスワードを選択していただけます。
     </div>
 
     <!-- Session Status -->
@@ -18,8 +19,15 @@
 
         <div class="flex items-center justify-end mt-4">
             <x-primary-button>
-                {{ __('Email Password Reset Link') }}
+                <!-- {{ __('Email Password Reset Link') }} -->
+                メールを送る
             </x-primary-button>
         </div>
+
+        @if (Route::has('owner.password.request'))
+        <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('owner.login') }}">
+            ログイン画面に戻る
+        </a>
+        @endif
     </form>
 </x-guest-layout>

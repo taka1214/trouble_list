@@ -11,6 +11,7 @@
         <div class="p-6 text-gray-900">
           <section class="text-gray-600 body-font relative">
             <div class="container px-5 py-24 mx-auto">
+            <x-flash-message status="session('status)" />
               <div class="flex flex-col text-center w-full mb-12">
                 <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">新規投稿</h1>
               </div>
@@ -40,8 +41,8 @@
                       </div>
                     </div>
                     <div class="col-span-2 flex justify-around mt-4">
-                      <button type="button" onclick="location.href='{{ route('owner.posts.index') }}'" class="bg-gray-200 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg">戻る</button>
-                      <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>
+                      <button type="button" onclick="location.href='{{ route('owner.posts.index') }}'" class="bg-gray-300 border-0 py-2 px-8 mt-3 focus:outline-none hover:bg-opacity-90 rounded-xl text-md shadow-md">一覧に戻る</button>
+                      <button type="submit" class="text-white bg-default border-0 py-2 px-8 mt-3 focus:outline-none  hover:bg-opacity-90 rounded-xl text-md shadow-md">登録</button>
                     </div>
                   </div>
                 </form>

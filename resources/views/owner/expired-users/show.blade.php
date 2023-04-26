@@ -59,20 +59,20 @@
                   </div>
                   <div class="p-2 w-full mt-4 flex flex-col lg:flex-row lg:justify-center sm:justify-around">
                     <div class="w-full lg:w-1/2 mb-2 lg:mb-0 lg:pr-1">
-                      <form id="delete_{{ $user->id }}" method="post" action="{{ route('owner.expired-users.destroy', ['user' => $user->id]) }}">
+                      <form id="delete_{{ $user->id }}" method="post" action="{{ route('owner.expired-users.destroy', ['user' => $user->id]) }}" class="text-white bg-alert border-0 py-2 px-8 mt-3 focus:outline-none hover:bg-opacity-90 rounded-xl text-center text-md shadow-md">
                         @csrf
                         @method('DELETE')
-                        <button data-id="{{ $user->id }}" onclick="return deletePost(this)" class="text-white bg-red-400 border-0 py-2 px-4 focus:outline-none hover:bg-red-500 rounded text-sm w-full">完全に削除</button>
+                        <button data-id="{{ $user->id }}" onclick="return deletePost(this)" >完全削除</button>
                       </form>
                     </div>
-                    <div class="w-full lg:w-1/2 lg:pl-1">
+                    <div class="w-full lg:w-1/2 lg:pl-1 text-white bg-default border-0 py-2 px-8 focus:outline-none hover:bg-opacity-90 rounded-xl text-center text-md shadow-md">
                       <form id="delete_{{ $user->id }}" method="post" action="{{ route('owner.expired-users.restore', ['user' => $user->id]) }}">
                         @csrf
                         @method('put')
-                        <button data-id="{{ $user->id }}" class="text-white bg-blue-400 border-0 py-2 px-4 focus:outline-none hover:bg-blue-500 rounded text-sm w-full">戻す</button>
+                        <button data-id="{{ $user->id }}">戻す</button>
                       </form>
                     </div>
-                    <button type="button" onclick="location.href='{{ route('owner.expired-users.index') }}'" class="bg-gray-200 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg mt-2 sm:mt-0 w-full">一覧に戻る</button>
+                    <button type="button" onclick="location.href='{{ route('owner.expired-users.index') }}'" class="bg-gray-300 border-0 py-2 px-8 mt-3 focus:outline-none hover:bg-opacity-90 rounded-xl text-md shadow-md">一覧に戻る</button>
                   </div>
                 </div>
               </div>

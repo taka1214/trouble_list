@@ -25,7 +25,7 @@
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" /> -->
             <x-input-label for="name" value="名前" /><span class="text-xs text-gray-500">お名前は編集できません</span>
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" readonly required autofocus autocomplete="name" />
+            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" readonly required autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
@@ -33,9 +33,15 @@
             <!-- <x-input-label for="nickname" :value="__('Nickname')" />
             <x-text-input id="nickname" name="nickname" type="text" class="mt-1 block w-full" :value="old('nickname', $user->nickname)" required autocomplete="nickname" />
             <x-input-error class="mt-2" :messages="$errors->get('nickname')" /> -->
-            <x-input-label for="nickname" value="ニックネーム" /><span class="text-xs text-gray-500">ニックネームが空欄の場合、お名前の方が投稿者として表示されます。</span>
-            <x-text-input id="nickname" name="nickname" type="text" class="mt-1 block w-full" :value="old('nickname', $user->nickname)" autocomplete="nickname" />
+            <x-input-label for="nickname" value="ニックネーム" /><span class="text-xs text-gray-500">ニックネームが空欄の場合、お名前が投稿者として表示されます。</span>
+            <x-text-input id="nickname" name="nickname" type="text" class="mt-1 block w-full" :value="old('nickname', $user->nickname)" autofocus autocomplete="nickname" />
             <x-input-error class="mt-2" :messages="$errors->get('nickname')" />
+        </div>
+
+        <div>
+            <x-input-label for="room_number" value="部屋番号" /><span class="text-xs text-gray-500">お部屋番号は編集できません</span>
+            <x-text-input id="room_number" name="room_number" type="text" class="mt-1 block w-full" :value="old('room_number', $user->room_number)" readonly autocomplete="room_number" />
+            <x-input-error class="mt-2" :messages="$errors->get('room_number')" />
         </div>
 
         <div>

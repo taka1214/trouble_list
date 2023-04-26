@@ -26,13 +26,11 @@ Route::middleware('auth:users')->group(function () {
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
-    // Route::put('/{post}', [PostController::class, 'update'])->name('posts.update');
-    // Route::delete('/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     
-    Route::get('/post/like/{id}', [PostController::class, 'like'])->name('posts.like');
-    Route::get('/post/unlike/{id}', [PostController::class, 'unlike'])->name('posts.unlike');
+    Route::post('/post/like/{id}', [PostController::class, 'like'])->name('posts.like');
+    Route::post('/post/unlike/{id}', [PostController::class, 'unlike'])->name('posts.unlike');
 });
 
 Route::middleware(['auth:users', 'verified'])->group(function () {

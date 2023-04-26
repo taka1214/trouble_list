@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\Like;
 use App\Models\Image;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -129,5 +131,38 @@ class PostController extends Controller
                 'message' => '投稿を削除しました',
                 'status' => 'alert',
             ]);
+    }
+
+    public function like($id)
+    {
+        $like = Like::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
+
+        if (!$like) {
+            Like::create([
+                'post_id' => $id,
+                'user_id' => Auth::user()->id,
+            ]);
+        }
+
+        $post = Post::findOrFail($id);
+
+        return response()->json([
+            'likes_count' => $post->likes->count(),
+        ]);
+    }
+
+    public function unlike($id)
+    {
+        $like = Like::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
+
+        if ($like) {
+            $like->delete();
+        }
+
+        $post = Post::findOrFail($id);
+
+        return response()->json([
+            'likes_count' => $post->likes->count(),
+        ]);
     }
 }

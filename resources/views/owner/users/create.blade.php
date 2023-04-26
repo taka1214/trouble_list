@@ -27,9 +27,9 @@
                     </div>
                     <div class="p-2 w-full">
                       <div class="relative">
-                        <label for="nickname" class="leading-7 text-sm text-gray-600">ニックネーム</label>
-                        <input type="text" id="nickname" name="nickname" value="{{ old('nickname') }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                        <x-input-error :messages="$errors->get('nickname')" class="mt-2" />
+                        <label for="room_number" class="leading-7 text-sm text-gray-600">部屋番号</label>
+                        <input type="text" id="room_number" name="room_number" value="{{ old('room_number') }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                        <x-input-error :messages="$errors->get('room_number')" class="mt-2" />
                       </div>
                     </div>
                     <div class="p-2 w-full">
@@ -54,8 +54,8 @@
                       </div>
                     </div>
                     <div class="p-2 w-full mt-4 flex justify-around">
-                      <button type="button" onclick="location.href='{{ route('owner.users.index') }}'" class="bg-gray-200 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg">戻る</button>
-                      <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>
+                      <button type="button" onclick="location.href='{{ route('owner.users.index') }}'" class="bg-gray-300 border-0 py-2 px-8 mt-3 focus:outline-none hover:bg-opacity-90 rounded-xl text-md shadow-md">戻る</button>
+                      <button type="submit" class="text-white bg-default border-0 py-2 px-8 mt-3 focus:outline-none  hover:bg-opacity-90 rounded-xl text-md shadow-md">登録</button>
                     </div>
                   </div>
                 </form>

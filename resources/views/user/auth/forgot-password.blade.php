@@ -23,5 +23,11 @@
                 メールを送る
             </x-primary-button>
         </div>
+
+        @if (Route::has('owner.password.request'))
+        <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('user.login') }}">
+            ログイン画面に戻る
+        </a>
+        @endif
     </form>
 </x-guest-layout>

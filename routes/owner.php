@@ -35,6 +35,9 @@ Route::resource('users', UsersController::class)
 
 Route::middleware(['auth:owners', 'verified'])->group(function () {
     Route::resource('posts', PostController::class);
+    
+    Route::post('/post/like/{id}', [PostController::class, 'like'])->name('posts.like');
+    Route::post('/post/unlike/{id}', [PostController::class, 'unlike'])->name('posts.unlike');
 });
 
 Route::middleware(['auth:owners', 'verified'])->group(function () {

@@ -51,13 +51,13 @@
                   </div>
                   <div class="p-2 w-full mt-4 flex flex-col lg:flex-row lg:justify-center sm:justify-around">
                     <div class="w-full lg:w-1/2 mb-2 lg:mb-0 lg:pr-1">
-                      <form id="delete_{{ $user->id }}" method="post" action="{{ route('owner.users.destroy', ['user' => $user->id]) }}">
+                      <form id="delete_{{ $user->id }}" method="post" action="{{ route('owner.users.destroy', ['user' => $user->id]) }}" class="text-white bg-alert border-0 py-2 px-8 mt-3 focus:outline-none hover:bg-opacity-90 rounded-xl text-center text-md shadow-md">
                         @csrf
                         @method('DELETE')
-                        <button data-id="{{ $user->id }}" onclick="deletePost(this)" class="text-white bg-red-400 border-0 py-2 px-4 focus:outline-none hover:bg-red-500 rounded text-sm w-full">削除</button>
+                        <button data-id="{{ $user->id }}" onclick="deletePost(this)">削除</button>
                       </form>
                     </div>
-                    <button type="button" onclick="location.href='{{ route('owner.users.index') }}'" class="bg-gray-200 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg mt-2 sm:mt-0 w-full">一覧に戻る</button>
+                    <button type="button" onclick="location.href='{{ route('owner.users.index') }}'" class="bg-gray-300 border-0 py-2 px-8 mt-3 focus:outline-none hover:bg-opacity-90 rounded-xl text-md shadow-md">一覧に戻る</button>
                   </div>
                 </div>
               </div>

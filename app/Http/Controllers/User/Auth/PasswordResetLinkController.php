@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TestMail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class PasswordResetLinkController extends Controller
 {
@@ -27,21 +31,27 @@ class PasswordResetLinkController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        Mail::to('globar173@gmail.com')
-        ->send(new TestMail());
-        
         $request->validate([
             'email' => ['required', 'email'],
         ]);
 
-        // Use broker method to specify the users broker
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        // Generate a new token
+        $token = Str::random(60);
 
-        return $status == Password::RESET_LINK_SENT
-            ? back()->with('status', __($status))
-            : back()->withInput($request->only('email'))
-            ->withErrors(['email' => __($status)]);
+        // Delete any existing tokens for the email
+        DB::table('password_resets')->where('email', $request->email)->delete();
+
+        // Store the token in the password_resets table
+        DB::table('password_resets')->insert([
+            'email' => $request->email,
+            'token' => Hash::make($token),
+            'created_at' => Carbon::now(),
+        ]);
+
+        // Send the custom TestMail with the token
+        Mail::to($request->email)->send(new TestMail($token));
+
+        // Return the success status
+        return back()->with('status', __('passwords.sent'));
     }
 }

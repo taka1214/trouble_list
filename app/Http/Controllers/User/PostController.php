@@ -10,6 +10,7 @@ use App\Models\Like;
 use App\Models\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Jobs\Likes;
 
 class PostController extends Controller
 {
@@ -148,7 +149,11 @@ class PostController extends Controller
             ]);
         }
 
-        return redirect()->route('user.posts.index');
+        $post = Post::findOrFail($id);
+
+        return response()->json([
+            'likes_count' => $post->likes->count(),
+        ]);
     }
 
     public function unlike($id)
@@ -159,6 +164,10 @@ class PostController extends Controller
             $like->delete();
         }
 
-        return redirect()->route('user.posts.index');
+        $post = Post::findOrFail($id);
+
+        return response()->json([
+            'likes_count' => $post->likes->count(),
+        ]);
     }
 }

@@ -158,6 +158,7 @@ return [
         'body' => '本文',
         'message' => '返信',
         'password' => 'パスワード',
+        'current_password' => '現在のパスワード',
         'name' => '名前',
         'email' => 'メールアドレス',
     ],

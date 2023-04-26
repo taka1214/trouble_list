@@ -40,10 +40,9 @@
                         <x-input-error :messages="$errors->get('image_files.*')" class="mt-2" />
                       </div>
                     </div>
-                    
                     <div class="p-2 w-full mt-4 flex flex-wrap justify-around">
-                      <button type="button" onclick="location.href='{{ route('user.posts.index') }}'" class="bg-gray-200 border-0 py-2 px-8 mt-2 sm:mt-0 focus:outline-none hover:bg-gray-400 rounded text-lg">戻る</button>
-                      <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 mt-2 sm:mt-0 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>
+                      <button type="button" onclick="location.href='{{ route('user.posts.index') }}'" class="bg-gray-300 border-0 py-2 px-8 mt-3 focus:outline-none hover:bg-opacity-90 rounded-xl text-md shadow-md">一覧に戻る</button>
+                      <button type="submit" class="text-white bg-default border-0 py-2 px-8 mt-3 focus:outline-none  hover:bg-opacity-90 rounded-xl text-md shadow-md">登録</button>
                     </div>
                   </div>
                 </form>

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
 
 class NewPasswordController extends Controller
 {
@@ -29,6 +31,10 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+
+        Mail::to($request->email)
+        ->send(new TestMail($request->token));
+
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],

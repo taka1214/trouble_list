@@ -22,7 +22,7 @@ class UsersController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::select('id', 'name', 'nickname', 'email', 'created_at')
+        $query = User::select('id', 'name', 'nickname', 'room_number', 'email', 'created_at')
             ->orderByDesc('updated_at')
             ->orderByDesc('created_at');
 
@@ -57,6 +57,7 @@ class UsersController extends Controller
             'name' => $request->name,
             'nickname' => $request->nickname,
             'email' => $request->email,
+            'room_number' => $request->room_number,
             'password' => Hash::make($request->password),
         ]);
 
@@ -105,6 +106,7 @@ class UsersController extends Controller
         $user->name = $request->name;
         $user->nickname = $request->nickname;
         $user->email = $request->email;
+        $user->room_number = $request->room_number;
         $user->password = Hash::make($request->password);
         $user->save();
 
