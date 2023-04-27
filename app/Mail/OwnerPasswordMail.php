@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class TestMail extends Mailable
+class OwnerPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -26,7 +26,7 @@ class TestMail extends Mailable
 
     public function build()
     {
-        return $this->view('emails.test');
+        return $this->view('owner.emails.test');
     }
 
     /**
@@ -49,7 +49,7 @@ class TestMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'emails.test',
+            view: 'owner.emails.test',
         );
     }
 

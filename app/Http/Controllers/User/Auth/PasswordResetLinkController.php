@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\TestMail;
+use App\Mail\UserPasswordMail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -49,7 +49,7 @@ class PasswordResetLinkController extends Controller
         ]);
 
         // Send the custom TestMail with the token
-        Mail::to($request->email)->send(new TestMail($token));
+        Mail::to($request->email)->send(new UserPasswordMail($token));
 
         // Return the success status
         return back()->with('status', __('passwords.sent'));

@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\TestMail;
+use App\Mail\UserPasswordMail;
 
 class NewPasswordController extends Controller
 {
@@ -31,9 +31,8 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-
         Mail::to($request->email)
-        ->send(new TestMail($request->token));
+        ->send(new UserPasswordMail($request->token));
 
         $request->validate([
             'token' => ['required'],

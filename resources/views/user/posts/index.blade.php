@@ -43,7 +43,7 @@
                       <td class="hidden md:table-cell px-2 sm:px-4 py-3" onclick="location.href='{{ route('user.posts.show', ['post' => $post->id]) }}'">{{ Str::limit($post->body, 60, '…' ) }}</td>
                       <td class="hidden md:table-cell text-sm px-2 sm:px-4 py-3">{{ $post->created_at->format('m/d/H:i') }}</td>
                       <td class="px-2 sm:px-4 py-3 text-center md:block hidden">
-                        <button onclick="location.href='{{ route('user.posts.show', ['post' => $post->id]) }}'" class="text-white bg-default border-0 py-1 px-3 focus:outline-none hover:bg-opacity-90 rounded-xl text-md">詳細</button>
+                        <button onclick="location.href='{{ route('user.posts.show', ['post' => $post->id]) }}'" class="text-white bg-default border-0 py-1 px-3 focus:outline-none hover:bg-opacity-90 rounded-xl text-md shadow-md">詳細</button>
                       </td>
                       <td class="px-2 sm:px-4 py-3 text-center">
                         @if($post->is_liked_by_auth_user())

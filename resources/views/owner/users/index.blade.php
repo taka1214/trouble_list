@@ -42,11 +42,11 @@
                       <td class="px-2 md:px-4 py-3 cursor-pointer" onclick="location.href='{{ route('owner.users.show', ['user' => $user->id]) }}'">{{ $user->created_at->format('m/d/H:i') }}</td>
                     </tr>
                     <tr class="hidden sm:table-row">
-                      <td class="px-2 md:px-4 py-3" onclick="location.href='{{ route('owner.users.show', ['user' => $user->id]) }}'">{{ $user->name }}</td>
+                      <td class="px-2 md:px-4 py-3">{{ $user->name }}</td>
                       <td class="hidden md:table-cell px-2 md:px-4 py-3">{{ $user->nickname ?? $user->name }}</td>
                       <td class="hidden md:table-cell px-2 md:px-4 py-3">{{ $user->room_number }}</td>
                       <td class="hidden md:table-cell px-2 md:px-4 py-3">{{ $user->email }}</td>
-                      <td class="px-2 md:px-4 py-3" onclick="location.href='{{ route('owner.users.show', ['user' => $user->id]) }}'">{{ $user->created_at->format('m/d/H:i') }}</td>
+                      <td class="px-2 md:px-4 py-3">{{ $user->created_at->format('m/d/H:i') }}</td>
                       <td class="hidden md:table-cell px-2 sm:px-4 py-3 text-center">
                         <form id="delete_{{ $user->id }}" method="post" action="{{ route('owner.users.destroy', ['user' => $user->id]) }}">
                           @csrf

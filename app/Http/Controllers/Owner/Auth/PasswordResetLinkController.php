@@ -8,8 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\TestMail;
-use App\Models\Owner;
+use App\Mail\OwnerPasswordMail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class PasswordResetLinkController extends Controller
 {
@@ -28,24 +31,27 @@ class PasswordResetLinkController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        
-        // Send the password reset link
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );;
-        
-        // Validate the email address first
         $request->validate([
             'email' => ['required', 'email'],
         ]);
-        
-        // Send the test email after the validation has passed
-        Mail::to($request->email)
-        ->send(new TestMail());
-        
-        return $status == Password::RESET_LINK_SENT
-            ? back()->with('status', __($status))
-            : back()->withInput($request->only('email'))
-            ->withErrors(['email' => __($status)]);
+
+        // Generate a new token
+        $token = Str::random(60);
+
+        // Delete any existing tokens for the email
+        DB::table('owner_password_resets')->where('email', $request->email)->delete();
+
+        // Insert the new token for the email
+        DB::table('owner_password_resets')->insert([
+            'email' => $request->email,
+            'token' => $token, // Use the plain token instead of Hash::make($token)
+            'created_at' => Carbon::now(),
+        ]);
+
+        // Send the custom OwnerPasswordMail with the plain token
+        Mail::to($request->email)->send(new OwnerPasswordMail($token));
+
+        // Return the success status
+        return back()->with('status', __('passwords.sent'));
     }
 }
