@@ -11,6 +11,10 @@ use App\Models\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\Likes;
+use Aws\S3\S3Client;
+use Illuminate\Support\Facades\Log;
+use Exception;
+
 
 class PostController extends Controller
 {
@@ -57,13 +61,8 @@ class PostController extends Controller
         ]);
 
         if ($request->hasFile('image_files')) {
-            foreach ($request->file('image_files') as $image_file) {
-                $file_path = $image_file->store('public/images');
-                Image::create([
-                    'post_id' => $post->id,
-                    'file_path' => $file_path,
-                ]);
-            }
+            $images = $post->uploadImagesToS3($request->file('image_files'));
+            Image::insert($images);
         }
 
         return redirect()->route('user.posts.index')
@@ -75,7 +74,7 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = Post::with('replies.user', 'replies.owner')->find($id);
+        $post = Post::with(['replies.user', 'replies.owner', 'images'])->find($id);
         $replies = $post->replies;
         $postUser = $post->user;
         $postOwner = $post->owner;
@@ -95,23 +94,13 @@ class PostController extends Controller
 
         // 画像の削除処理
         if ($request->input('delete_images')) {
-            foreach ($request->input('delete_images') as $image_id) {
-                $image = Image::find($image_id);
-                if ($image) {
-                    Storage::delete($image->file_path);
-                    $image->delete();
-                }
-            }
+            $post->deleteImagesFromS3($request->input('delete_images'));
         }
 
         // 画像の追加処理
         if ($request->hasFile('image_files')) {
-            foreach ($request->file('image_files') as $image_file) {
-                $file_path = $image_file->store('public/images');
-                $post->images()->create([
-                    'file_path' => str_replace('public/', '', $file_path),
-                ]);
-            }
+            $images = $post->uploadImagesToS3($request->file('image_files'));
+            Image::insert($images);
         }
 
         $post->title = $request->title;
@@ -128,8 +117,14 @@ class PostController extends Controller
 
     public function destroy($id)
     {
-        Post::find($id)->delete();
+        $post = Post::find($id);
 
+        // 画像IDを取得
+        $image_ids = $post->images->pluck('id')->toArray();
+        // S3から画像を削除
+        $post->deleteImagesFromS3($image_ids);
+        // 投稿を削除
+        $post->delete();
         return redirect()
             ->route('user.posts.index')
             ->with([

@@ -38,7 +38,7 @@
                     @foreach($post->images as $image)
                     <div class="relative">
                       <label for="image_file" class="leading-7 text-sm text-gray-600">画像</label>
-                      <img id="image_file" src="{{ Storage::url($image->file_path) }}" class="w-full rounded border border-gray-300 text-base outline-none py-1 px-3 leading-8">
+                      <img id="image_file" src="{{ $image->url }}" class="w-full rounded border border-gray-300 text-base outline-none py-1 px-3 leading-8">
                     </div>
                     @endforeach
                   </div>
@@ -101,7 +101,7 @@
                               <form id="destroy_{{ $reply->id }}" method="post" action="{{ route('user.replies.destroy', ['reply' => $reply->id ]) }}" class="text-white bg-alert border-0 py-1 px-2 focus:outline-none hover:bg-opacity-90 rounded text-sm mr-2">
                                 @csrf
                                 @method('DELETE')
-                                <button data-id="{{ $reply->id }}" onclick="return deletePost(this)" >削除</button>
+                                <button data-id="{{ $reply->id }}" onclick="return deletePost(this)">削除</button>
                               </form>
                             </div>
                             @endif
