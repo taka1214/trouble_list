@@ -91,7 +91,7 @@
                               {{ $reply->message }}
                             </div>
                             @foreach($reply->images as $image)
-                            <img id="image_file" src="{{ Storage::url($image->file_path) }}" class="w-full rounded border border-gray-300 text-base outline-none py-1 px-3 leading-8">
+                            <img id="image_file" src="{{ $image->file_path }}" class="w-full rounded border border-gray-300 text-base outline-none py-1 px-3 leading-8">
                             @endforeach
 
                             <!-- ログインしている人と返信の投稿者が同じならstart -->
@@ -134,10 +134,10 @@
                               @if ($reply->images->count() > 0)
                               @foreach ($reply->images as $image)
                               <label for="image_file" class="leading-7 text-sm text-gray-600">画像</label>
-                              <img id="image_file" src="{{ Storage::url($image->file_path) }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                              <img id="image_file" src="{{ $image->file_path }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                               <div class="mt-2">
                                 <input type="checkbox" id="delete_image_{{ $image->id }}" name="delete_image[{{ $image->id }}]" value="1">
-                                <label for="delete_image_{{ $image->id }}" class="text-sm text-gray-600">現在の画像を削除する</label>
+                                <label for="delete_image_{{ $image->id }}" class="text-sm text-gray-600">この画像を削除する</label>
                               </div>
                               @endforeach
                               @endif

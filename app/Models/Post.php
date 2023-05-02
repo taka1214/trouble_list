@@ -21,6 +21,18 @@ class Post extends Model
         'image_file',
     ];
 
+    private function getS3Client()
+    {
+        return new S3Client([
+            'version' => 'latest',
+            'region' => env('AWS_DEFAULT_REGION'),
+            'credentials' => [
+                'key' => env('AWS_ACCESS_KEY_ID'),
+                'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            ],
+        ]);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -63,14 +75,7 @@ class Post extends Model
 
     public function uploadImagesToS3($image_files)
     {
-        $s3Client = new S3Client([
-            'version' => 'latest',
-            'region' => env('AWS_DEFAULT_REGION'),
-            'credentials' => [
-                'key' => env('AWS_ACCESS_KEY_ID'),
-                'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            ],
-        ]);
+        $s3Client = $this->getS3Client();
 
         $images = [];
         foreach ($image_files as $image_file) {
@@ -97,14 +102,7 @@ class Post extends Model
 
     public function deleteImagesFromS3($image_ids)
     {
-        $s3Client = new S3Client([
-            'version' => 'latest',
-            'region' => env('AWS_DEFAULT_REGION'),
-            'credentials' => [
-                'key' => env('AWS_ACCESS_KEY_ID'),
-                'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            ],
-        ]);
+        $s3Client = $this->getS3Client();
 
         foreach ($image_ids as $image_id) {
             $image = Image::find($image_id);
