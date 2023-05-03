@@ -51,7 +51,7 @@ class Reply extends Model
         return $this->hasMany(ReplyImage::class);
     }
 
-    public function uploadImagesToS3($image_files)
+    public function uploadImagesToS3($image_files, $prefix)
     {
         $s3Client = $this->getS3Client();
 
@@ -60,7 +60,7 @@ class Reply extends Model
             try {
                 $result = $s3Client->putObject([
                     'Bucket' => env('AWS_BUCKET'),
-                    'Key' => 'replyImages/' . $image_file->getClientOriginalName(),
+                    'Key' => $prefix . '/replyImages/' . $image_file->getClientOriginalName(),
                     'SourceFile' => $image_file->getRealPath(),
                 ]);
 
@@ -78,17 +78,17 @@ class Reply extends Model
         return $images;
     }
 
-    public function deleteImagesFromS3($image_ids)
+    public function deleteImagesFromS3($image_ids, $prefix)
     {
         $s3Client = $this->getS3Client();
 
         foreach ($image_ids as $image_id) {
-            $image = Image::find($image_id);
+            $image = ReplyImage::find($image_id);
             if ($image) {
                 try {
                     $s3Client->deleteObject([
                         'Bucket' => env('AWS_BUCKET'),
-                        'Key' => 'images/' . basename($image->file_path),
+                        'Key' => $prefix . '/images/' . basename($image->file_path),
                     ]);
 
                     $image->delete();

@@ -38,7 +38,7 @@
                         <label for="image_files" class="leading-7 text-sm text-gray-600">画像</label>
                         @foreach($post->images as $image)
                         <div>
-                          <img src="{{ $image->url }}">
+                          <img src="{{ $image->file_path }}">
                           <div class="mt-2">
                             <input type="checkbox" id="delete_images_{{ $image->id }}" name="delete_images[]" value="{{ $image->id }}">
                             <label for="delete_images_{{ $image->id }}" class="text-sm text-gray-600">この画像を削除する</label>

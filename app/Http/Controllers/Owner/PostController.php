@@ -53,13 +53,8 @@ class PostController extends Controller
         ]);
 
         if ($request->hasFile('image_files')) {
-            foreach ($request->file('image_files') as $image_file) {
-                $file_path = $image_file->store('public/images');
-                Image::create([
-                    'post_id' => $post->id,
-                    'file_path' => $file_path,
-                ]);
-            }
+            $images = $post->uploadImagesToS3($request->file('image_files'), 'owner');
+            Image::insert($images);
         }
 
         return redirect()->route('owner.posts.index')
@@ -90,23 +85,13 @@ class PostController extends Controller
 
         // 画像の削除処理
         if ($request->input('delete_images')) {
-            foreach ($request->input('delete_images') as $image_id) {
-                $image = Image::find($image_id);
-                if ($image) {
-                    Storage::delete($image->file_path);
-                    $image->delete();
-                }
-            }
+            $post->deleteImagesFromS3($request->input('delete_images'), 'owner');
         }
 
         // 画像の追加処理
         if ($request->hasFile('image_files')) {
-            foreach ($request->file('image_files') as $image_file) {
-                $file_path = $image_file->store('public/images');
-                $post->images()->create([
-                    'file_path' => str_replace('public/', '', $file_path),
-                ]);
-            }
+            $images = $post->uploadImagesToS3($request->file('image_files'), 'owner');
+            Image::insert($images);
         }
 
         $post->title = $request->title;

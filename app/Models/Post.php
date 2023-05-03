@@ -73,7 +73,7 @@ class Post extends Model
         return $this->hasMany(Image::class);
     }
 
-    public function uploadImagesToS3($image_files)
+    public function uploadImagesToS3($image_files, $prefix)
     {
         $s3Client = $this->getS3Client();
 
@@ -82,7 +82,7 @@ class Post extends Model
             try {
                 $result = $s3Client->putObject([
                     'Bucket' => env('AWS_BUCKET'),
-                    'Key' => 'images/' . $image_file->getClientOriginalName(),
+                    'Key' => $prefix . '/images/' . $image_file->getClientOriginalName(),
                     'SourceFile' => $image_file->getRealPath(),
                 ]);
 
@@ -100,7 +100,7 @@ class Post extends Model
         return $images;
     }
 
-    public function deleteImagesFromS3($image_ids)
+    public function deleteImagesFromS3($image_ids, $prefix = 'user')
     {
         $s3Client = $this->getS3Client();
 
@@ -110,7 +110,7 @@ class Post extends Model
                 try {
                     $s3Client->deleteObject([
                         'Bucket' => env('AWS_BUCKET'),
-                        'Key' => 'images/' . basename($image->file_path),
+                        'Key' => $prefix . '/images/' . basename($image->file_path),
                     ]);
 
                     $image->delete();

@@ -34,12 +34,13 @@ class ReplyController extends Controller
         // $reply->save();
 
         if ($request->hasFile('image_files')) {
-            foreach ($request->file('image_files') as $image_file) {
-                $file_path = $image_file->store('public/images');
-
+            // 画像をS3にアップロード
+            $images = $reply->uploadImagesToS3($request->file('image_files'), 'owner');
+            // アップロードされた画像をReplyImageモデルに保存
+            foreach ($images as $image) {
                 ReplyImage::create([
                     'reply_id' => $reply->id,
-                    'file_path' => $file_path,
+                    'file_path' => $image['file_path'],
                 ]);
             }
         }
@@ -63,21 +64,13 @@ class ReplyController extends Controller
 
         // 既存の画像の削除
         if ($request->input('delete_image')) {
-            foreach ($request->input('delete_image') as $image_id => $value) {
-                $image = ReplyImage::find($image_id);
-                Storage::delete($image->file_path);
-                $image->delete();
-            }
+            $reply->deleteImagesFromS3(array_keys($request->input('delete_image')), 'owner');
         }
 
         // 新しい画像の追加
         if ($request->hasFile('new_image_file')) {
-            foreach ($request->file('new_image_file') as $file) {
-                $file_path = $file->store('public/images');
-                $reply->images()->create([
-                    'file_path' => str_replace('public/', '', $file_path),
-                ]);
-            }
+            $uploaded_images = $reply->uploadImagesToS3($request->file('new_image_file'), 'owner');
+            $reply->images()->createMany($uploaded_images);
         }
 
         $reply->message = $request->message;

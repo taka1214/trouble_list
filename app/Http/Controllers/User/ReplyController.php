@@ -12,16 +12,16 @@ use Illuminate\Support\Facades\Storage;
 
 class ReplyController extends Controller
 {
-    public function index()
-    {
-        $replies = Post::find(1)->replies;
-        $posts = Reply::find(1)->Post;
-    }
+    // public function index()
+    // {
+    //     $replies = Post::find(1)->replies;
+    //     $posts = Reply::find(1)->Post;
+    // }
 
-    public function create(Post $Post)
-    {
-        return view('user.replies.create', compact('Post'));
-    }
+    // public function create(Post $Post)
+    // {
+    //     return view('user.replies.create', compact('Post'));
+    // }
 
     public function store(ReplyRequest $request)
     {
@@ -36,8 +36,7 @@ class ReplyController extends Controller
 
         if ($request->hasFile('image_files')) {
             // 画像をS3にアップロード
-            $images = $reply->uploadImagesToS3($request->file('image_files'));
-
+            $images = $reply->uploadImagesToS3($request->file('image_files'), 'user');
             // アップロードされた画像をReplyImageモデルに保存
             foreach ($images as $image) {
                 ReplyImage::create([
@@ -67,12 +66,12 @@ class ReplyController extends Controller
 
         // 既存の画像の削除
         if ($request->input('delete_image')) {
-            $reply->deleteImagesFromS3(array_keys($request->input('delete_image')));
+            $reply->deleteImagesFromS3(array_keys($request->input('delete_image')), 'user');
         }
 
         // 新しい画像の追加
         if ($request->hasFile('new_image_file')) {
-            $uploaded_images = $reply->uploadImagesToS3($request->file('new_image_file'));
+            $uploaded_images = $reply->uploadImagesToS3($request->file('new_image_file'), 'user');
             $reply->images()->createMany($uploaded_images);
         }
 
@@ -93,7 +92,7 @@ class ReplyController extends Controller
 
         // 画像の削除
         $image_ids = $reply->images->pluck('id')->toArray();
-        $reply->deleteImagesFromS3($image_ids);
+        $reply->deleteImagesFromS3($image_ids, 'user');
 
         $reply->delete();
 

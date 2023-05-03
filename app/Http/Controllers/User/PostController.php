@@ -61,7 +61,7 @@ class PostController extends Controller
         ]);
 
         if ($request->hasFile('image_files')) {
-            $images = $post->uploadImagesToS3($request->file('image_files'));
+            $images = $post->uploadImagesToS3($request->file('image_files'), 'user');
             Image::insert($images);
         }
 
@@ -94,12 +94,12 @@ class PostController extends Controller
 
         // 画像の削除処理
         if ($request->input('delete_images')) {
-            $post->deleteImagesFromS3($request->input('delete_images'));
+            $post->deleteImagesFromS3($request->input('delete_images'), 'user');
         }
 
         // 画像の追加処理
         if ($request->hasFile('image_files')) {
-            $images = $post->uploadImagesToS3($request->file('image_files'));
+            $images = $post->uploadImagesToS3($request->file('image_files'), 'user');
             Image::insert($images);
         }
 
@@ -122,7 +122,7 @@ class PostController extends Controller
         // 画像IDを取得
         $image_ids = $post->images->pluck('id')->toArray();
         // S3から画像を削除
-        $post->deleteImagesFromS3($image_ids);
+        $post->deleteImagesFromS3($image_ids, 'user');
         // 投稿を削除
         $post->delete();
         return redirect()

@@ -22,6 +22,6 @@ class Image extends Model
 
     public function getUrlAttribute()
     {
-        return $this->file_path;
+        return Storage::url('troublelist/user/images' . $this->file_path);
     }
 }

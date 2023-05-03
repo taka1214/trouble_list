@@ -14,6 +14,7 @@ use App\Http\Controllers\Owner\PostController;
 use App\Http\Controllers\Owner\ReplyController;
 use App\Http\Controllers\Owner\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,4 +113,12 @@ Route::middleware('auth:owners')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+});
+
+Route::fallback(function () {
+    if (Auth::check()) {
+        return redirect()->route('owners.posts.index');
+    } else {
+        return redirect()->route('owner.login');
+    }
 });
