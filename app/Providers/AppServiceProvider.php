@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,7 +26,5 @@ class AppServiceProvider extends ServiceProvider
         if(request()->is('owner*')){
             config(['session.cookie' => config('session.cookie_owner')]);
         }
-
-        Schema::defaultStringLength(191);
     }
 }
