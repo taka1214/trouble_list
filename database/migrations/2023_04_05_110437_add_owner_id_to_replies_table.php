@@ -14,20 +14,18 @@ return new class extends Migration
     public function up()
     {
         Schema::table('replies', function (Blueprint $table) {
-            $table->unsignedBigInteger('owner_id')->nullable();
-            $table->foreign('owner_id')->constrained()->references('id')->on('owners')->onDelete('cascade');
+            if (!Schema::hasColumn('replies', 'owner_id')) {
+                $table->unsignedBigInteger('owner_id')->nullable();
+            }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::table('replies', function (Blueprint $table) {
-            $table->dropColumn('owner_id');
+            if (Schema::hasColumn('replies', 'owner_id')) {
+                $table->dropColumn('owner_id');
+            }
         });
     }
 };

@@ -14,7 +14,7 @@ class AddRoomNumberToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('room_number')->nullable(); // or $table->string('room_number')->nullable(); if you want it to be a string
+            $table->string('room_number')->nullable(); // or $table->string('room_number')->nullable(); if you want it to be a string
         });
     }
 

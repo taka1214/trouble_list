@@ -25,7 +25,7 @@ return new class extends Migration
 
                 $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->foreign('owner_id')->references('id')->on('owners')->onDelete('cascade');
+                $table->foreign('owner_id')->constrained()->references('id')->on('owners')->onDelete('cascade');
             });
         }
     }

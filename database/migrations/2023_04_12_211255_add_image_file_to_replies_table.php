@@ -14,19 +14,18 @@ return new class extends Migration
     public function up()
     {
         Schema::table('replies', function (Blueprint $table) {
-            $table->string('image_file')->nullable();
+            if (!Schema::hasColumn('replies', 'image_file')) {
+                $table->string('image_file')->nullable();
+            }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::table('replies', function (Blueprint $table) {
-            $table->dropColumn('image_file');
+            if (Schema::hasColumn('replies', 'image_file')) {
+                $table->dropColumn('image_file');
+            }
         });
     }
 };
