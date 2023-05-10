@@ -24,10 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Schema::defaultStringLength(191);
+
         if(request()->is('owner*')){
             config(['session.cookie' => config('session.cookie_owner')]);
         }
-
-        Schema::defaultStringLength(191);
     }
 }
