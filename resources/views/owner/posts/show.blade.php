@@ -15,7 +15,7 @@
               <div class="flex flex-col text-center w-full mb-12">
                 <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">投稿詳細</h1>
               </div>
-              <div class="lg:1/2 md:w-3/4 mx-auto">
+              <div class="lg:w-1/2 md:w-3/4 mx-auto">
                 <div class="-m-2">
                   <div class="p-2 w-full">
                     <div class="relative">
