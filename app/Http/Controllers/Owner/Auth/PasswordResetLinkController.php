@@ -44,7 +44,7 @@ class PasswordResetLinkController extends Controller
         // Insert the new token for the email
         DB::table('owner_password_resets')->insert([
             'email' => $request->email,
-            'token' => $token, // Use the plain token instead of Hash::make($token)
+            'token' => Hash::make($token),
             'created_at' => Carbon::now(),
         ]);
 
