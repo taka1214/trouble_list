@@ -42,7 +42,7 @@
                     $bgColor = $post->is_pinned ? 'bg-default-10' : '';
                     @endphp
                     <tr class="{{ $bgColor }}">
-                      <td class="px-2 sm:px-4 py-3" onclick="location.href='{{ route('user.posts.show', ['post' => $post->id]) }}'">
+                      <td class="px-2 sm:px-4 py-3" onclick="location.href='{{ route('owner.posts.show', ['post' => $post->id]) }}'">
                         <div>{{ Str::limit($post->title, 30, '…' ) }}</div>
                         <div class="sm:hidden text-xs ml-2">{{ Str::limit($post->body, 80, '…' ) }}</div>
                       </td>
