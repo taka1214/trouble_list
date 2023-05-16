@@ -3,6 +3,8 @@
 @php
 if(session('status') === 'info'){$bgColor = 'bg-default';}
 if(session('status') === 'alert'){$bgColor = 'bg-alert';}
+if(session('status') === 'info50'){$bgColor = 'bg-default-50';}
+if(session('status') === 'alert50'){$bgColor = 'bg-alert-50';}
 @endphp
 
 @if(session('message'))

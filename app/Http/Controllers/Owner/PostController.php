@@ -15,24 +15,17 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
-        // 返信の日時を気にせずに投稿だけの日時を見る場合の一覧順序(更新が新しい順)
-        // $posts = Post::select('id', 'title', 'body', 'image_file', 'created_at', 'updated_at')
-        // ->orderByDesc('updated_at')
-        // ->orderByDesc('created_at')
-        // ->paginate(10);
-        // return view('owner.posts.index', compact('posts'));
-
         // 返信の日時も含めた場合の一覧順序(更新が新しい順)
         $query = Post::leftJoin('replies', 'posts.id', '=', 'replies.post_id')
-            ->select('posts.id', 'posts.title', 'posts.body', 'posts.image_file', 'posts.created_at', 'posts.updated_at')
+            ->select('posts.id', 'posts.title', 'posts.body', 'posts.image_file', 'posts.is_pinned', 'posts.created_at')
             ->selectRaw('GREATEST(posts.updated_at, COALESCE(MAX(replies.updated_at), \'2000-01-01\')) as sort_date')
-            ->groupBy('posts.id', 'posts.title', 'posts.body', 'posts.image_file', 'posts.created_at', 'posts.updated_at')
+            ->groupBy('posts.id', 'posts.title', 'posts.body', 'posts.image_file', 'posts.is_pinned', 'posts.created_at')
+            ->orderByDesc('posts.is_pinned')
             ->orderByDesc('sort_date');
 
         if ($request->has('search')) {
             $query->where('posts.title', 'like', '%' . $request->input('search') . '%')
-                ->orWhere('posts.body', 'like', '%' . $request->input('search') . '%')
-                ->orWhere('replies.message', 'like', '%' . $request->input('search') . '%');
+                ->orWhere('posts.body', 'like', '%' . $request->input('search') . '%');
         }
 
         $posts = $query->paginate(10);
@@ -50,6 +43,7 @@ class PostController extends Controller
             'title' => $request->title,
             'body' => $request->body,
             'owner_id' => $request->user()->id,
+            'is_pinned' => $request->has('is_pinned') ? $request->is_pinned : 0,
         ]);
 
         if ($request->hasFile('image_files')) {
@@ -60,7 +54,7 @@ class PostController extends Controller
         return redirect()->route('owner.posts.index')
             ->with([
                 'message' => '投稿が完了しました',
-                'status' => 'info',
+                'status' => 'info50',
             ]);
     }
 
@@ -102,7 +96,7 @@ class PostController extends Controller
             ->route('owner.posts.index')
             ->with([
                 'message' => '投稿を更新しました',
-                'status' => 'info',
+                'status' => 'info50',
             ]);
     }
 
@@ -114,7 +108,7 @@ class PostController extends Controller
             ->route('owner.posts.index')
             ->with([
                 'message' => '投稿を削除しました',
-                'status' => 'alert',
+                'status' => 'alert50',
             ]);
     }
 

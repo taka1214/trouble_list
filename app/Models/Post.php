@@ -19,6 +19,7 @@ class Post extends Model
         'owner_id',
         'user_id',
         'image_file',
+        'is_pinned'
     ];
 
     private function getS3Client()

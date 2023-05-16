@@ -28,14 +28,11 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
-        // 使い方の例
-        // $posts = User::find(1)->posts;
-        // $user = Post::find(3)->user;
-        // dd($posts, $user);
         $query = Post::leftJoin('replies', 'posts.id', '=', 'replies.post_id')
-            ->select('posts.id', 'posts.title', 'posts.body', 'posts.image_file', 'posts.created_at')
+            ->select('posts.id', 'posts.title', 'posts.body', 'posts.image_file', 'posts.is_pinned', 'posts.created_at')
             ->selectRaw('GREATEST(posts.updated_at, COALESCE(MAX(replies.updated_at), \'2000-01-01\')) as sort_date')
-            ->groupBy('posts.id', 'posts.title', 'posts.body', 'posts.image_file', 'posts.created_at')
+            ->groupBy('posts.id', 'posts.title', 'posts.body', 'posts.image_file', 'posts.is_pinned', 'posts.created_at')
+            ->orderByDesc('posts.is_pinned')
             ->orderByDesc('sort_date');
 
         if ($request->has('search')) {
@@ -67,8 +64,8 @@ class PostController extends Controller
 
         return redirect()->route('user.posts.index')
             ->with([
-                'message' => '投稿が完了しました',
-                'status' => 'info',
+                'message' => '投稿されました',
+                'status' => 'info50',
             ]);
     }
 
@@ -111,7 +108,7 @@ class PostController extends Controller
             ->route('user.posts.index')
             ->with([
                 'message' => '投稿を更新しました',
-                'status' => 'info',
+                'status' => 'info50',
             ]);
     }
 
@@ -129,7 +126,7 @@ class PostController extends Controller
             ->route('user.posts.index')
             ->with([
                 'message' => '投稿を削除しました',
-                'status' => 'alert',
+                'status' => 'alert50',
             ]);
     }
 

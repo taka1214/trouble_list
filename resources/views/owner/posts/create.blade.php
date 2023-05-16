@@ -11,7 +11,7 @@
         <div class="p-6 text-gray-900">
           <section class="text-gray-600 body-font relative">
             <div class="container px-5 py-24 mx-auto">
-            <x-flash-message status="session('status)" />
+              <x-flash-message status="session('status)" />
               <div class="flex flex-col text-center w-full mb-12">
                 <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">新規投稿</h1>
               </div>
@@ -38,6 +38,12 @@
                         <label for="image_files" class="leading-7 text-sm text-gray-600">画像</label>
                         <input type="file" id="image_files" name="image_files[]" multiple>
                         <x-input-error :messages="$errors->get('image_files.*')" class="mt-2" />
+                      </div>
+                    </div>
+                    <div class="p-2 w-full">
+                      <div class="relative">
+                        <label for="is_pinned" class="leading-7 text-sm text-gray-600">投稿を固定</label>
+                        <input type="checkbox" id="is_pinned" name="is_pinned" value="1" {{ old('is_pinned') ? 'checked' : '' }} class="form-checkbox h-5 w-5 text-indigo-600">
                       </div>
                     </div>
                     <div class="col-span-2 flex justify-around mt-4">

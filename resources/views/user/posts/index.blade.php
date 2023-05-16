@@ -30,17 +30,23 @@
                   <thead>
                     <tr>
                       <th class="px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">タイトル</th>
-                      <th class="hidden md:table-cell px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">本文</th>
+                      <th class="hidden sm:table-cell px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">本文</th>
                       <th class="hidden md:table-cell px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">投稿日時</th>
                       <th class="px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th>
-                      <th class="px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th>
+                      <th class="hidden md:table-cell px-2 sm:px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th>
                     </tr>
                   </thead>
                   <tbody>
                     @foreach ($posts as $post)
-                    <tr>
-                      <td class="px-2 sm:px-4 py-3 cursor-pointer" onclick="location.href='{{ route('user.posts.show', ['post' => $post->id]) }}'">{{ Str::limit($post->title, 30, '…' ) }}</td>
-                      <td class="hidden md:table-cell px-2 sm:px-4 py-3" onclick="location.href='{{ route('user.posts.show', ['post' => $post->id]) }}'">{{ Str::limit($post->body, 60, '…' ) }}</td>
+                    @php
+                    $bgColor = $post->is_pinned ? 'bg-default-10' : '';
+                    @endphp
+                    <tr class="{{ $bgColor }}">
+                      <td class="px-2 sm:px-4 py-3" onclick="location.href='{{ route('user.posts.show', ['post' => $post->id]) }}'">
+                        <div class="">{{ Str::limit($post->title, 30, '…' ) }}</div>
+                        <div class="sm:hidden text-xs ml-2">{{ Str::limit($post->body, 80, '…' ) }}</div>
+                      </td>
+                      <td class="hidden sm:table-cell px-2 sm:px-4 py-3" onclick="location.href='{{ route('user.posts.show', ['post' => $post->id]) }}'">{{ Str::limit($post->body, 80, '…' ) }}</td>
                       <td class="hidden md:table-cell text-sm px-2 sm:px-4 py-3">{{ $post->created_at->format('m/d/H:i') }}</td>
                       <td class="px-2 sm:px-4 py-3 text-center md:block hidden">
                         <button onclick="location.href='{{ route('user.posts.show', ['post' => $post->id]) }}'" class="text-white bg-default border-0 py-1 px-3 focus:outline-none hover:bg-opacity-90 rounded-xl text-md shadow-md">詳細</button>
@@ -61,6 +67,7 @@
                     </tr>
                     @endforeach
                   </tbody>
+
                 </table>
                 {{ $posts->links() }}
               </div>
