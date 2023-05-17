@@ -31,8 +31,8 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        Mail::to($request->email)
-        ->send(new UserPasswordMail($request->token));
+        // Mail::to($request->email)
+        // ->send(new UserPasswordMail($request->token));
 
         $request->validate([
             'token' => ['required'],
