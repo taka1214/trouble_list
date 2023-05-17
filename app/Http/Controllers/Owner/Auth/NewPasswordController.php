@@ -55,7 +55,7 @@ class NewPasswordController extends Controller
         );
 
         // ログにステータスを記録
-    Log::info('Password reset status: '.$status);
+    dd('Password reset status: '.$status);
 
         // If the password was successfully reset, we will redirect the user back to
         // the application's home authenticated view. If there is an error we can
