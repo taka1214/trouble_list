@@ -13,6 +13,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OwnerPasswordMail;
+use Illuminate\Support\Facades\Log;
 
 class NewPasswordController extends Controller
 {
@@ -50,8 +51,11 @@ class NewPasswordController extends Controller
 
                 event(new PasswordReset($user));
             },
-            // 'owners' // Use the 'owners' password reset configuration
+            'owners' // Use the 'owners' password reset configuration
         );
+
+        // ログにステータスを記録
+    Log::info('Password reset status: '.$status);
 
         // If the password was successfully reset, we will redirect the user back to
         // the application's home authenticated view. If there is an error we can
