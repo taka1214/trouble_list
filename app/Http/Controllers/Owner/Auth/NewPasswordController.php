@@ -31,9 +31,6 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Mail::to($request->email)
-        //     ->send(new OwnerPasswordMail($request->token));
-
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],
@@ -53,7 +50,7 @@ class NewPasswordController extends Controller
 
                 event(new PasswordReset($user));
             },
-            'owners' // Use the 'owners' password reset configuration
+            // 'owners' // Use the 'owners' password reset configuration
         );
 
         // If the password was successfully reset, we will redirect the user back to
