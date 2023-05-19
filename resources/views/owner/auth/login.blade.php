@@ -32,21 +32,26 @@
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('owner.password.request'))
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('owner.password.request') }}">
-                <!-- {{ __('Forgot your password?') }} -->
-                パスワードをお忘れですか？
-            </a>
-            @endif
+        <div class="flex justify-between mt-8">
+            <div class="flex flex-col mr-3">
+                @if (Route::has('owner.register'))
+                <a href="{{ route('owner.register') }}" class="mt-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-500">オーナーアカウントの新規登録</a>
+                @endif
 
-            <x-primary-button class="ml-3">
+                @if (Route::has('owner.password.request'))
+                <a class="text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-default" href="{{ route('owner.password.request') }}">
+                    <!-- {{ __('Forgot your password?') }} -->
+                    パスワードをお忘れですか？
+                </a>
+                @endif
+            </div>
+
+            <x-primary-button>
                 <!-- {{ __('Log in') }} -->
                 ログイン
             </x-primary-button>
         </div>
+
     </form>
-    @if (Route::has('owner.register'))
-    <a href="{{ route('owner.register') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">新規登録</a>
-    @endif
+
 </x-guest-layout>

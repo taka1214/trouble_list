@@ -79,11 +79,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Owner::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

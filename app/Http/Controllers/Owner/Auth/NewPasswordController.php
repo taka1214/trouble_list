@@ -13,8 +13,6 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OwnerPasswordMail;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 
 class NewPasswordController extends Controller
 {
