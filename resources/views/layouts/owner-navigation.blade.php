@@ -4,11 +4,11 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
+                <!-- <div class="shrink-0 flex items-center">
                     <a href="{{ route('owner.users.index') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
-                </div>
+                </div> -->
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -79,7 +79,21 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+        <!-- Responsive Settings Options -->
+        <div class="pt-4 pb-1 border-t border-gray-200">
+            <!-- <div class="px-4">
+                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
+                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+            </div> -->
+
+        </div>
+        
         <div class="pt-2 pb-3 space-y-1">
+            <div class="mt-3 space-y-1">
+                <x-responsive-nav-link :href="route('owner.profile.edit')">
+                    {{ Auth::user()->nickname ?? Auth::user()->name }}のプロフィール
+                </x-responsive-nav-link>
+            </div>
             <x-responsive-nav-link :href="route('owner.users.index')" :active="request()->routeIs('owner.users.index')">
                 ユーザー管理
             </x-responsive-nav-link>
@@ -89,32 +103,17 @@
             <x-responsive-nav-link :href="route('owner.posts.index')" :active="request()->routeIs('owner.posts.index')">
                 投稿一覧
             </x-responsive-nav-link>
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('owner.profile.edit')">
-                    <!-- {{ __('Profile') }} -->
-                    {{ Auth::user()->nickname ?? Auth::user()->name }}のプロフィール
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('owner.logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('owner.logout')" onclick="event.preventDefault();
+            <!-- Authentication -->
+            <form method="POST" action="{{ route('owner.logout') }}">
+                @csrf
+                <x-responsive-nav-link :href="route('owner.logout')" onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        <!-- {{ __('Log Out') }} -->
-                        ログアウト
-                    </x-responsive-nav-link>
-                </form>
-            </div>
+                    <!-- {{ __('Log Out') }} -->
+                    ログアウト
+                </x-responsive-nav-link>
+            </form>
         </div>
+
+
     </div>
 </nav>

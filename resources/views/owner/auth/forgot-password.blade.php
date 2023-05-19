@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="mb-4 text-sm text-gray-600">
         <!-- {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }} -->
-        パスワードを忘れた場合でも心配ありません。メールアドレスをお知らせいただければ、パスワードリセット用のリンクをメールで送信いたします。そのリンクを使用して新しいパスワードを選択していただけます。
+        パスワードリセット用のリンクをメールで送信いたします。
     </div>
 
     <!-- Session Status -->

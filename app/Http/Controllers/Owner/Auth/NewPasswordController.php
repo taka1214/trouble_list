@@ -14,6 +14,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OwnerPasswordMail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class NewPasswordController extends Controller
 {
@@ -53,9 +54,6 @@ class NewPasswordController extends Controller
             },
             'owners' // Use the 'owners' password reset configuration
         );
-
-        // ログにステータスを記録
-    dd('Password reset status: '.$status);
 
         // If the password was successfully reset, we will redirect the user back to
         // the application's home authenticated view. If there is an error we can
