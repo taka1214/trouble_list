@@ -16,6 +16,7 @@ class Reply extends Model
         'post_id',
         'user_id',
         'owner_id',
+        'admin_id',
         'image_file',
     ];
 
@@ -44,6 +45,11 @@ class Reply extends Model
     public function owner()
     {
         return $this->belongsTo(Owner::class);
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
     }
 
     public function images()

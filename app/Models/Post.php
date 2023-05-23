@@ -16,6 +16,7 @@ class Post extends Model
         'id',
         'title',
         'body',
+        'admin_id',
         'owner_id',
         'user_id',
         'image_file',
@@ -41,6 +42,10 @@ class Post extends Model
     public function owner()
     {
         return $this->belongsTo(Owner::class);
+    }
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
     }
 
     public function replies()
