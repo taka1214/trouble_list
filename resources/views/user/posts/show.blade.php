@@ -38,12 +38,11 @@
                     @foreach($post->images as $image)
                     <div class="relative">
                       <label for="image_file" class="leading-7 text-sm text-gray-600">画像</label>
-                      <img id="image_file" src="{{ $image->file_path }}" class="w-full rounded border border-gray-300 text-base outline-none py-1 px-3 leading-8">
+                      <img id="image_file" src="https://troublelist.s3.ap-northeast-1.amazonaws.com/{{ $image->file_path }}" class="w-full rounded border border-gray-300 text-base outline-none py-1 px-3 leading-8">
                     </div>
                     @endforeach
                   </div>
                   @endif
-
                   <div class="p-2 w-full">
                     <div class="relative">
                       <!-- 投稿した人&最終更新日を表示start -->
