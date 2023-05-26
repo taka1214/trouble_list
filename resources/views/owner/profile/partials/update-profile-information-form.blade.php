@@ -7,7 +7,6 @@
 
         <p class="mt-1 text-sm text-gray-600">
             <!-- {{ __("Update your account's profile information and email address.") }} -->
-            アカウントのプロフィール情報とメールアドレスを更新してください。
         </p>
 
     </header>
@@ -21,18 +20,12 @@
         @method('patch')
 
         <div>
-            <!-- <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" /> -->
             <x-input-label for="name" value="名前" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
-            <!-- <x-input-label for="nickname" :value="__('Nickname')" />
-            <x-text-input id="nickname" name="nickname" type="text" class="mt-1 block w-full" :value="old('nickname', $user->nickname)" required autocomplete="nickname" />
-            <x-input-error class="mt-2" :messages="$errors->get('nickname')" /> -->
             <x-input-label for="nickname" value="ニックネーム" /><span class="text-xs text-gray-500">ニックネームが空欄の場合、お名前が投稿者として表示されます。</span>
             <x-text-input id="nickname" name="nickname" type="text" class="mt-1 block w-full" :value="old('nickname', $user->nickname)" autocomplete="nickname" />
             <x-input-error class="mt-2" :messages="$errors->get('nickname')" />

@@ -7,16 +7,15 @@
 
         <p class="mt-1 text-sm text-gray-600">
             <!-- {{ __("Update your account's profile information and email address.") }} -->
-            アカウントのプロフィール情報とメールアドレスを更新してください。
         </p>
 
     </header>
 
-    <form id="send-verification" method="post" action="{{ route('owner.verification.send') }}">
+    <form id="send-verification" method="post" action="{{ route('admin.verification.send') }}">
         @csrf
     </form>
 
-    <form method="post" action="{{ route('owner.profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('admin.profile.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -29,14 +28,11 @@
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
-        <div>
-            <!-- <x-input-label for="nickname" :value="__('Nickname')" />
-            <x-text-input id="nickname" name="nickname" type="text" class="mt-1 block w-full" :value="old('nickname', $user->nickname)" required autocomplete="nickname" />
-            <x-input-error class="mt-2" :messages="$errors->get('nickname')" /> -->
+        <!-- <div>
             <x-input-label for="nickname" value="ニックネーム" /><span class="text-xs text-gray-500">ニックネームが空欄の場合、お名前が投稿者として表示されます。</span>
             <x-text-input id="nickname" name="nickname" type="text" class="mt-1 block w-full" :value="old('nickname', $user->nickname)" autocomplete="nickname" />
             <x-input-error class="mt-2" :messages="$errors->get('nickname')" />
-        </div>
+        </div> -->
 
         <div>
             <x-input-label for="email" :value="__('Email')" />

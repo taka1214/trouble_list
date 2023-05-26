@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Aws\S3\S3Client;
 use Illuminate\Support\Facades\Log;
+use Intervention\Image\Facades\Image as ImageIntervention;
 
 class Post extends Model
 {
@@ -86,16 +87,29 @@ class Post extends Model
         $images = [];
         foreach ($image_files as $image_file) {
             try {
+                // Intervention Imageを利用してリサイズ
+                $resized_image = ImageIntervention::make($image_file)->resize(500, 500, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+
+                // 一時的なストリームを作成
+                $stream = tmpfile();
+                $path = stream_get_meta_data($stream)['uri'];
+                $resized_image->save($path);
+
+                // リサイズ後の画像をS3にアップロード
                 $result = $s3Client->putObject([
                     'Bucket' => env('AWS_BUCKET'),
                     'Key' => $prefix . '/images/' . $image_file->getClientOriginalName(),
-                    'SourceFile' => $image_file->getRealPath(),
+                    'SourceFile' => $path,  // リサイズ後の画像ファイルパスを指定
+                    'ACL' => 'public-read' // 公開設定
                 ]);
 
-                $path = $result['ObjectURL'];
+                $image_path = $result['ObjectURL'];
                 $images[] = [
                     'post_id' => $this->id,
-                    'file_path' => $path,
+                    'file_path' => $image_path,
                 ];
             } catch (Aws\S3\Exception\S3Exception $e) {
                 // エラーが発生した場合、詳細をログに記録
@@ -105,6 +119,7 @@ class Post extends Model
 
         return $images;
     }
+
 
     public function deleteImagesFromS3($image_ids, $prefix = 'user')
     {

@@ -13,14 +13,16 @@ class AdminPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $token;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $token)
     {
-        //
+        $this->token = $token;
     }
 
     /**
@@ -43,7 +45,7 @@ class AdminPasswordMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'view.name',
+            view: 'admin.emails.test',
         );
     }
 
@@ -55,5 +57,14 @@ class AdminPasswordMail extends Mailable
     public function attachments()
     {
         return [];
+    }
+
+    public function build()
+    {
+        return $this->subject('Your Password Reset Link')
+            ->view('admin.emails.test')
+            ->with([
+                'token' => $this->token,
+            ]);
     }
 }

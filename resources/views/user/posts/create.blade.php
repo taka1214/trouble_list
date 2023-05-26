@@ -11,7 +11,7 @@
         <div class="p-6 text-gray-900">
           <section class="text-gray-600 body-font relative">
             <div class="container px-5 py-24 mx-auto">
-            <x-flash-message status="session('status)" />
+              <x-flash-message status="session('status)" />
               <div class="flex flex-col text-center w-full mb-12">
                 <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">新規投稿</h1>
               </div>
@@ -36,7 +36,7 @@
                     <div class="p-2 w-full">
                       <div class="relative">
                         <label for="image_files" class="leading-7 text-sm text-gray-600">画像</label>
-                        <input type="file" id="image_files" name="image_files[]" multiple>
+                        <input type="file" id="image_files" name="image_files[]" multiple accept="image/*">
                         <x-input-error :messages="$errors->get('image_files.*')" class="mt-2" />
                       </div>
                     </div>
