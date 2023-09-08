@@ -46,6 +46,9 @@
 
                   <div class="p-2 w-full">
                     <div class="relative">
+                      <p class="text-left text-xs text-gray-400">
+                        既読： {{ $post->readCount }}
+                      </p>
                       <!-- 投稿した人&最終更新日を表示start -->
                       <p class="text-right text-xs text-gray-400">
                         @if($postUser)
@@ -101,7 +104,7 @@
                               <form id="destroy_{{ $reply->id }}" method="post" action="{{ route('owner.replies.destroy', ['reply' => $reply->id ]) }}" class="text-white bg-alert border-0 py-1 px-2 focus:outline-none hover:bg-opacity-90 rounded text-sm mr-2">
                                 @csrf
                                 @method('DELETE')
-                                <button data-id="{{ $reply->id }}" onclick="return deletePost(this)" >削除</button>
+                                <button data-id="{{ $reply->id }}" onclick="return deletePost(this)">削除</button>
                               </form>
                             </div>
                             @endif

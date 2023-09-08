@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Like;
 use App\Models\Image;
+use App\Models\Read;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -60,12 +61,29 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = Post::with('replies.user', 'replies.owner')->find($id);
+        $post = Post::with(['replies.user', 'replies.owner', 'images'])->find($id);
         $replies = $post->replies;
         $postUser = $post->user;
         $postOwner = $post->owner;
+
+        // Ensure the user is authenticated
+        if (auth()->check()) {
+            // Check if the user has already read the post
+            $read = Read::where('owner_id', auth()->id())->where('post_id', $post->id)->first();
+
+            // If the user hasn't read the post, create a new read record
+            if (!$read) {
+                Read::create([
+                    'user_id' => auth()->id(),
+                    'owner_id' => $postOwner ? $postOwner->id : null,
+                    'post_id' => $post->id,
+                ]);
+            }
+        }
+
         return view('owner.posts.show', compact('post', 'replies', 'postUser', 'postOwner'));
     }
+
 
     public function edit($id)
     {

@@ -8,6 +8,7 @@ use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Models\Like;
 use App\Models\Image;
+use App\Models\Read;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\Likes;
@@ -75,7 +76,26 @@ class PostController extends Controller
         $replies = $post->replies;
         $postUser = $post->user;
         $postOwner = $post->owner;
-        return view('user.posts.show', compact('post', 'replies', 'postUser', 'postOwner'));
+        $ownerId = null;
+
+        // ここでオーナーIDを取得します
+        if ($postOwner) {
+            $ownerId = $postOwner->id;
+        }
+
+        // 認証済みユーザーが記事を既読にする処理
+        if (Auth::check()) {
+            $read = Read::firstOrCreate([
+                'user_id' => Auth::id(),
+                'post_id' => $id,
+                'owner_id' => $ownerId, // ここでオーナーIDを保存します
+            ]);
+        }
+
+        // 既読数を取得
+        $readCount = Read::where('post_id', $id)->count();
+
+        return view('user.posts.show', compact('post', 'replies', 'postUser', 'postOwner', 'readCount'));
     }
 
 

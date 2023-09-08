@@ -45,6 +45,9 @@
                   @endif
                   <div class="p-2 w-full">
                     <div class="relative">
+                      <p class="text-left text-xs text-gray-400">
+                        既読： {{ $post->readCount }}
+                      </p>
                       <!-- 投稿した人&最終更新日を表示start -->
                       <p class="text-right text-xs text-gray-400">
                         @if($postUser)

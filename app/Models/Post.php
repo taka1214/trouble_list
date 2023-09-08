@@ -58,6 +58,11 @@ class Post extends Model
         return $this->hasMany(Like::class);
     }
 
+    public function reads()
+    {
+        return $this->hasMany(Read::class);
+    }
+
     public function is_liked_by_auth_user()
     {
         $id = Auth::id();
@@ -126,5 +131,10 @@ class Post extends Model
                 }
             }
         }
+    }
+
+    public function getReadCountAttribute()
+    {
+        return $this->reads->count();
     }
 }
